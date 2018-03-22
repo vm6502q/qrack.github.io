@@ -12,12 +12,12 @@ Welcome to vm6502q's documentation!
 
 Let's hear it for some math!
 
-..math:: e^(i\pi) + 1 = 0
-   :label: pmatrix
+.. math:: e^(i\pi) + 1 = 0
+   :label: pmatrix1
 
 Hm!
 
-..math::
+.. math::
    :nowrap:
 
    \begin{pmatrix}
@@ -25,10 +25,10 @@ Hm!
    \gamma^{*}& \delta
    \end{pmatrix}
 
-   :label: pmatrix
+   :label: pmatrix2
    :caption: An example matrix.
 
-That's a pretty nifty matrix at :eq:`pmatrix`!
+That's a pretty nifty matrix at :eq:`pmatrix2`!
 
 Since Pythagoras, we know that :math:`a^2 + b^2 = c^2`.
 
