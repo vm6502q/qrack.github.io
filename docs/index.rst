@@ -30,6 +30,14 @@ Hm!
 
 That's a pretty nifty matrix at :eq:`pmatrix`!
 
+Since Pythagoras, we know that :math:`a^2 + b^2 = c^2`.
+
+.. math::
+
+   (a + b)^2 = a^2 + 2ab + b^2
+
+   (a - b)^2 = a^2 - 2ab + b^2
+
 Indices and tables
 ==================
 
