@@ -26,7 +26,6 @@ Hm!
    \gamma^{*}& \delta
    \end{pmatrix}
 
-   :caption: A caption for pmatrix2
 
 That's a pretty nifty matrix at :eq:`pmatrix2`!
 
@@ -45,4 +44,6 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+Example Doxygen Integration
+===========================
 .. doxygenindex::
