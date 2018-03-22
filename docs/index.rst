@@ -12,16 +12,23 @@ Welcome to vm6502q's documentation!
 
 Let's hear it for some math!
 
-..math::
-    :nowrap:
-    :label: matrix_example
-    :caption: An example matrix.
-    \begin{pmatrix}
-    \alpha& \beta^{*}\\
-    \gamma^{*}& \delta
-    \end{pmatrix}
+..math:: e^(i\pi) + 1 = 0
+   :label: pmatrix
 
-That's a pretty nifty matrix at :eq:`matrix_example`!
+Hm!
+
+..math::
+   :nowrap:
+
+   \begin{pmatrix}
+   \alpha& \beta^{*}\\
+   \gamma^{*}& \delta
+   \end{pmatrix}
+
+   :label: pmatrix
+   :caption: An example matrix.
+
+That's a pretty nifty matrix at :eq:`pmatrix`!
 
 Indices and tables
 ==================
