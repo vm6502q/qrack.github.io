@@ -19,14 +19,14 @@ Hm!
 
 .. math::
    :nowrap:
+   :label: pmatrix2
 
    \begin{pmatrix}
    \alpha& \beta^{*}\\
    \gamma^{*}& \delta
    \end{pmatrix}
 
-   :label: pmatrix2
-   :caption: An example matrix.
+   :caption: A caption for pmatrix2
 
 That's a pretty nifty matrix at :eq:`pmatrix2`!
 
@@ -44,3 +44,5 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. doxygenindex::
