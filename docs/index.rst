@@ -18,7 +18,6 @@ Let's hear it for some math!
 Hm!
 
 .. math::
-   :nowrap:
    :label: pmatrix2
 
    \begin{pmatrix}
