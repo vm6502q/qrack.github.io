@@ -1,6 +1,6 @@
 theme: jekyll-theme-dinky
 name: 6502-Q
-title: Quantum Enabled 6502
+title: VM6502Q
 url: https://vm6502q.github.io
 
 gems:
