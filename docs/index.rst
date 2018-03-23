@@ -18,13 +18,13 @@ Qrack: Introduction
 
 Primarily, this documentation is meant to teach enough about practical quantum computation and emulation that one can understand the implementation of all methods in Qrack to the point of being able to reimplement the algorithms equivalently on one's own. This introduction contains an overview of the general method whereby Qrack implements basically all of its gate and register functionality.
 
-Like classical bits, a set of qubits has a maximal respresentation as the permutation of bits. (An 8 bit byte has 256 permutations, commonly numbered 0 to 255, as does an 8 bit qubyte.) Additionally, the state of a qubyte is fully specified in terms of probability and phase of each permutation of qubits. This is the ":math:`|0\rangle/|1\rangle`" "permutation basis." There are other fully descriptive bases, such as the ":math:`|+\rangle/|-\rangle`" permutation basis, which is characteristic of Hadamard gates. The notation "|x\rangle" represents a "ket" of the "x" state in the quantum "bra-ket" notation of Dirac. It is a quantum state vector as described by Schrödinger's equation. When we say |01\rangle, we mean the qubit equivalent of the binary bit pemutation "01."
+Like classical bits, a set of qubits has a maximal respresentation as the permutation of bits. (An 8 bit byte has 256 permutations, commonly numbered 0 to 255, as does an 8 bit qubyte.) Additionally, the state of a qubyte is fully specified in terms of probability and phase of each permutation of qubits. This is the ":math:`|0\rangle/|1\rangle`" "permutation basis." There are other fully descriptive bases, such as the ":math:`|+\rangle/|-\rangle`" permutation basis, which is characteristic of Hadamard gates. The notation ":math:`|x\rangle`" represents a "ket" of the "x" state in the quantum "bra-ket" notation of Dirac. It is a quantum state vector as described by Schrödinger's equation. When we say :math:`|01\rangle`, we mean the qubit equivalent of the binary bit pemutation "01."
 
 The state of a two bit permutation can be described as follows: where one in the set of variables ":math:`x_0, x_1, x_2,` and :math:`x_3`" is equal to 1 and the rest are equal to zero, the state of the bit permutation can always be described by
 
 .. math:: |\psi\rangle = x_0 |00\rangle + x_1 |01\rangle + x_2 |10\rangle + x_3 |11\rangle.
 
-One of the leading variables is always 1 and the rest are always 0. That is, the state of the classical bit combination is always exactly one of |00\rangle, |01\rangle, |10\rangle, or |11\rangle, and never a mix of them at once, however we would mix them. One way to mix them is probabilistically, in which the sum of probabilities of states should be 100% or 1. For example, this suggests splitting x_0 and x_1 into 1/2 and 1/2 to represent a potential :math:`|\psi\rangle`, but Schrödinger's equation actually requires us to split into 1/\sqrt{2} and 1/\sqrt{2} to get 100% probability, like so,
+One of the leading variables is always 1 and the rest are always 0. That is, the state of the classical bit combination is always exactly one of :math:`|00\rangle, |01\rangle, |10\rangle,` or :math:`|11\rangle,` and never a mix of them at once, however we would mix them. One way to mix them is probabilistically, in which the sum of probabilities of states should be 100% or 1. For example, this suggests splitting x_0 and x_1 into 1/2 and 1/2 to represent a potential :math:`|\psi\rangle`, but Schrödinger's equation actually requires us to split into :math:`1/\sqrt{2}` and :math:`1/\sqrt{2}` to get 100% probability, like so,
 
 .. math:: |\psi\rangle = \frac{1}{\sqrt{2}} |00\rangle + \frac{1}{\sqrt{2}} |10\rangle,
 
@@ -32,7 +32,7 @@ where the leading coefficients are ultimately squared, (or actually multiplied b
 
 .. math:: |\psi\rangle = \frac{1+i}{2 \sqrt{2}} |00\rangle + \frac{1-i}{2 \sqrt{2}} |10\rangle
 
-where "i" is defined as the \sqrt(-1). This imparts "phase" to each permutation state vector component like |00\rangle or |10\rangle, (which are "eigenstates"). Phase and probability of permutation state fully (but not uniquely) specify the state of a coherent set of qubits.
+where "i" is defined as the \sqrt(-1). This imparts "phase" to each permutation state vector component like :math:`|00\rangle` or :math:`|10\rangle`, (which are "eigenstates"). Phase and probability of permutation state fully (but not uniquely) specify the state of a coherent set of qubits.
 
 For N bits, there are :math:`2^N` permutation basis "eigenstates" that with probability normalization and phase fully describe every possible quantum state of the N qubits. A CoherentUnit tracks the :math:`2^N` dimensional state vector of eigenstate components, each permutation carrying probability and phase. It optimizes certain register-like methods by operating in parallel over the "entranglements" of these permutation basis states. For example, the state
 
@@ -41,6 +41,7 @@ For N bits, there are :math:`2^N` permutation basis "eigenstates" that with prob
 has a probablity of both bits being 1 or else both bits being 0, but it has no independent probability for the bits being different, when measured. If this state is acted on by an X or NOT gate on the left qubit, for example, we need only act on the states entrangled into the original state:
 
 .. math:: |\psi_0\rangle = \frac{1}{\sqrt{2}} |00\rangle + \frac{1}{\sqrt{2}} |11\rangle
+
 (When acted on by an X gate on the left bit, goes to:)
 
 .. math:: |\psi_1\rangle = \frac{1}{\sqrt{2}} |10\rangle + \frac{1}{\sqrt{2}} |01\rangle
@@ -50,6 +51,7 @@ In the permutation basis, "entanglement" is as simple as the ability to restrain
 In Qrack, simple gates are represented by small complex number matrices, generally with 2x2 components, that act on pairings of state vector components with the target qubit being 0 or 1 and all other qubits being held fixed in a loop iteration. For example, in an 8 qubit system, acting a single bit gate on the leftmost qubit, these two states become paired:
 
 .. math:: |00101111\rangle
+
 and
 
 .. math:: |10101111\rangle.
@@ -57,6 +59,7 @@ and
 Similarly, these states also become paired:
 
 .. math:: |00101100\rangle
+
 and
 
 .. math:: |10101100\rangle,
@@ -92,7 +95,7 @@ These ":math:`x_0`" and ":math:`x_1`" are the same type of coefficients describe
 and the action of a gate is a matrix multiplication:
 
 .. math::
-   :label: zgate
+   :label: zgatemult
 
    \begin{pmatrix}
    1 & 0\\
