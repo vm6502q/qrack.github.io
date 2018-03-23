@@ -24,7 +24,7 @@ The state of a two bit permutation can be described as follows: where one in the
 
 .. math:: |\psi\rangle = x_0 |00\rangle + x_1 |01\rangle + x_2 |10\rangle + x_3 |11\rangle.
 
-One of the leading variables is always 1 and the rest are always 0. That is, the state of the classical bit combination is always exactly one of |00\rangle, |01\rangle, |10\rangle, or |11\rangle, and never a mix of them at once, however we would mix them. One way to mix them is probabilistically, in which the sum of probabilities of states should be 100% or 1. For example, this suggests splitting x_0 and x_1 into 1/2 and 1/2 to represent a potential |psi\rangle, but Schrödinger's equation actually requires us to split into 1/\sqrt{2} and 1/\sqrt{2} to get 100% probability, like so,
+One of the leading variables is always 1 and the rest are always 0. That is, the state of the classical bit combination is always exactly one of |00\rangle, |01\rangle, |10\rangle, or |11\rangle, and never a mix of them at once, however we would mix them. One way to mix them is probabilistically, in which the sum of probabilities of states should be 100% or 1. For example, this suggests splitting x_0 and x_1 into 1/2 and 1/2 to represent a potential :math:`|\psi\rangle`, but Schrödinger's equation actually requires us to split into 1/\sqrt{2} and 1/\sqrt{2} to get 100% probability, like so,
 
 .. math:: |\psi\rangle = \frac{1}{\sqrt{2}} |00\rangle + \frac{1}{\sqrt{2}} |10\rangle,
 
@@ -45,7 +45,7 @@ has a probablity of both bits being 1 or else both bits being 0, but it has no i
 
 .. math:: |\psi_1\rangle = \frac{1}{\sqrt{2}} |10\rangle + \frac{1}{\sqrt{2}} |01\rangle
 
-In the permutation basis, "entanglement" is as simple as the ability to restrain bit combinations in specificying an arbitrary "|psi\rangle" state, as we have just described at length.
+In the permutation basis, "entanglement" is as simple as the ability to restrain bit combinations in specificying an arbitrary :math:`|\psi\rangle` state, as we have just described at length.
 
 In Qrack, simple gates are represented by small complex number matrices, generally with 2x2 components, that act on pairings of state vector components with the target qubit being 0 or 1 and all other qubits being held fixed in a loop iteration. For example, in an 8 qubit system, acting a single bit gate on the leftmost qubit, these two states become paired:
 
@@ -87,7 +87,7 @@ The single qubit state vector has two components:
 
 These ":math:`x_0`" and ":math:`x_1`" are the same type of coefficients described above,
 
-.. math:: |psi\rangle = x_0 |0\rangle + x_1 |1\rangle
+.. math:: |\psi\rangle = x_0 |0\rangle + x_1 |1\rangle
 
 and the action of a gate is a matrix multiplication:
 
