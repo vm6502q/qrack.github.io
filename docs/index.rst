@@ -49,17 +49,17 @@ In the permutation basis, "entanglement" is as simple as the ability to restrain
 
 In Qrack, simple gates are represented by small complex number matrices, generally with 2x2 components, that act on pairings of state vector components with the target qubit being 0 or 1 and all other qubits being held fixed in a loop iteration. For example, in an 8 qubit system, acting a single bit gate on the leftmost qubit, these two states become paired:
 
-.. math::|00101111\rangle
+.. math:: |00101111\rangle
 and
 
-.. math::|10101111\rangle.
+.. math:: |10101111\rangle.
 
 Similarly, these states also become paired:
 
-.. math::|00101100\rangle
+.. math:: |00101100\rangle
 and
 
-.. math::|10101100\rangle,
+.. math:: |10101100\rangle,
 
 And so on for all states in which the seven uninvolved bits are kept the same, but 0 and 1 states are paired for the bit acted on by the gate. This covers the entire permutation basis, a full description of all possible quantum states of the CoherentUnit, with pairs of two state vector components acted on by a 2x2 matrix. For example, for the Z gate, acting it on a single bit is equivalent to multiplying a single bit state vector by this matrix:
 
@@ -87,7 +87,7 @@ The single qubit state vector has two components:
 
 These ":math:`x_0`" and ":math:`x_1`" are the same type of coefficients described above,
 
-.. math::|psi\rangle = x_0 |0\rangle + x_1 |1\rangle
+.. math:: |psi\rangle = x_0 |0\rangle + x_1 |1\rangle
 
 and the action of a gate is a matrix multiplication:
 
