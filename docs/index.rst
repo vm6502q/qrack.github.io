@@ -34,11 +34,11 @@ where the leading coefficients are ultimately squared, (or actually multiplied b
 
 where "i" is defined as the \sqrt(-1). This imparts "phase" to each permutation state vector component like :math:`|00\rangle` or :math:`|10\rangle`, (which are "eigenstates"). Phase and probability of permutation state fully (but not uniquely) specify the state of a coherent set of qubits.
 
-For N bits, there are :math:`2^N` permutation basis "eigenstates" that with probability normalization and phase fully describe every possible quantum state of the N qubits. A CoherentUnit tracks the :math:`2^N` dimensional state vector of eigenstate components, each permutation carrying probability and phase. It optimizes certain register-like methods by operating in parallel over the "entranglements" of these permutation basis states. For example, the state
+For N bits, there are :math:`2^N` permutation basis "eigenstates" that with probability normalization and phase fully describe every possible quantum state of the N qubits. A CoherentUnit tracks the :math:`2^N` dimensional state vector of eigenstate components, each permutation carrying probability and phase. It optimizes certain register-like methods by operating in parallel over the "entanglements" of these permutation basis states. For example, the state
 
 .. math:: |\psi\rangle = \frac{1}{\sqrt{2}} |00\rangle + \frac{1}{\sqrt{2}} |11\rangle
 
-has a probablity of both bits being 1 or else both bits being 0, but it has no independent probability for the bits being different, when measured. If this state is acted on by an X or NOT gate on the left qubit, for example, we need only act on the states entrangled into the original state:
+has a probablity of both bits being 1 or else both bits being 0, but it has no independent probability for the bits being different, when measured. If this state is acted on by an X or NOT gate on the left qubit, for example, we need only act on the states entangled into the original state:
 
 .. math:: |\psi_0\rangle = \frac{1}{\sqrt{2}} |00\rangle + \frac{1}{\sqrt{2}} |11\rangle
 
