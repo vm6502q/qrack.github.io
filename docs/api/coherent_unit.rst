@@ -2,7 +2,7 @@
 
 .. Copyright (c) 2018
 
-``CoherentUnit``
+Qrack::CoherentUnit
 ================
 
 Defined in `qregister.hpp <https://github.com/vm6502q/qrack/blob/master/qregister.hpp>`_.
@@ -15,11 +15,11 @@ Creating a CoherentUnit
 
 There's two primary implementations of a ``CoherentUnit``:
 
-.. doxygenenum:: Qrack::CoherentUnitEngine
+.. doxygenenum:: CoherentUnitEngine
 
 These enums can be passed to an allocator to create a ``CoherentUnit`` of that specified implementation type:
 
-.. doxygenfunction:: Qrack::CreateCoherentUnit
+.. doxygenfunction:: CreateCoherentUnit
 
 Constructors
 ------------
