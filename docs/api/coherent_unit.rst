@@ -102,9 +102,9 @@ Quantum Gates
 
 .. doxygenfunction:: CZ(bitLenInt, bitLenInt, bitLenInt)
 
-.. doxygenfunction:: R1(double, bitLenInt, bitLenInt)
+.. doxygenfunction:: RT(double, bitLenInt, bitLenInt)
 
-.. doxygenfunction:: R1Dyad(int, int, bitLenInt, bitLenInt)
+.. doxygenfunction:: RTDyad(int, int, bitLenInt, bitLenInt)
 
 .. doxygenfunction:: RX(double, bitLenInt, bitLenInt)
 
