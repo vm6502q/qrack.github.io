@@ -4,14 +4,27 @@
    contain the root `toctree` directive.
 
 VM6502Q and Qrack
-===================================
+=================
 
-Indices and tables
-==================
+Build Status
+------------
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+ * Qrack: |qrack_build_status|
+ * VM6502Q: |vm6502q_build_status|
+ * CC65: |cc65_build_status|
+ * Examples: |examples_build_status|
+
+.. |cc65_build_status| image:: https://api.travis-ci.org/vm6502q/cc65.svg?branch=6502q
+    :target: https://travis-ci.org/vm6502q/cc65/builds
+
+.. |qrack_build_status| image:: https://api.travis-ci.org/vm6502q/qrack.svg?branch=master
+    :target: https://travis-ci.org/vm6502q/qrack/builds
+
+.. |vm6502q_build_status| image:: https://api.travis-ci.org/vm6502q/vm6502q.svg?branch=master
+    :target: https://travis-ci.org/vm6502q/vm6502q/builds
+
+.. |examples_build_status| image:: https://api.travis-ci.org/vm6502q/examples.svg?branch=master
+    :target: https://travis-ci.org/vm6502q/examples/builds
 
 .. TODO: General commentary:
          
@@ -40,11 +53,124 @@ Indices and tables
          literature (but a minimum of published papers) is a very viable way of
          sharing the weight.
 
-.. TODO: (Benn) Improve the Doxygen integration, and provide unique pages for
-         CoherentUnit and other primary targets.
+VM6502Q and Qrack
+=================
 
-Qrack: Introduction
-===================
+Introduction
+------------
+
+
+Qrack is a C++ quantum bit simulator, with the ability to support arbitrary numbers of entangled qubits - up to system limitations.  Suitable for embedding in other projects, the :cpp:class:`Qrack::CoherentUnit` contains a full and performant collection of standard quantum gates, as well as variations suitable for register operations and arbitrary rotations.
+
+As a demonstration of the :cpp:class:`Qrack::CoherentUnit` implementation, a MOS-6502 microprocessor [MOS-6502]_ virtual machine has been modified with a set of new opcodes supporting quantum operations.  The `vm6502q <https://github.com/vm6502q/vm6502q>`_ virtual machine exposes new integrated quantum opcodes such as a Grover Search [Grover]_ across a page of memory.  These programs are demonstrated in the `examples <https://github.com/vm6502q/examples>`_ repository.
+
+Finally, a `6502 toolchain <https://github.com/vm6502q/cc65>`_, based on the CC65 toolchain [CC65]_, has been modified and enhanced to support both the new opcodes - for the assembler - as well as `C Syntax Enhancements`_.  This is performed primarily as sandbox/exploratory work to help clarify what quantum computational software engineering might look like as the hardware reaches commoditization.
+
+Getting Started
+---------------
+
+Checking Out
+~~~~~~~~~~~~
+
+Check out each of the major repositories into a project branch:
+
+.. code-block:: bash
+
+          / $ mkdir qc
+          / $ cd qc
+        qc/ $ for i in 'https://github.com/vm6502q/qrack.git'      \
+                       'https://github.com/vm6502q/vm6502q.git'    \
+                       'https://github.com/vm6502q/examples.git'   \
+                       'https://github.com/vm6502q/cc65.git'; do
+                git clone $i
+              done
+
+            # Add a necessary symlink connecting the vm6502q project with qrack
+        qc/ $ cd vm6502q && ln -s ../qrack
+
+Compiling
+~~~~~~~~~
+
+.. note::
+
+    The ``qrack`` project supports two primary implementations: OpenCL-optimized and software-only.  See :doc:`opencl` for details on installing OpenCL on some platforms, or your appropriate OS documentation.
+
+    If you do not have OpenCL or do not wish to use it, supply the ``ENABLE_OPENCL=0`` environment to ``make`` when building the project.
+
+Compile in the ``vm6502q`` project.  This will build both the ``vm6502q`` emulator as well as the linked ``qrack`` project:
+
+.. code-block:: bash
+
+   vm6502q/ $ make
+            # OR if no OpenCL is available
+   vm6502q/ $ ENABLE_OPENCL=0 make
+
+Testing
+~~~~~~~
+
+The qrack project has an extensive set of unittests for the various :cpp:class:`Qrack::CoherentUnit` gates and simulator methods.  This can be executed through running the test suite in the ``qrack`` project:
+
+.. code-block:: bash
+
+     qrack/ $ make test
+            # OR if no OpenCL is available
+     qrack/ $ ENABLE_OPENCL=0 make test
+
+This may take a few minutes to complete, depending on the strength of the system executing the tests.
+
+.. note::
+
+    The unittests, by default, run against all supported engines.  If only a specific engine type is desired, the ``--disable-opencl`` or ``--disable-software`` command line parameters may be supplied to the ``unittest`` binary.
+
+Embedding Qrack
+~~~~~~~~~~~~~~~
+
+The ``qrack`` project produces a ``libqrack.a`` archive, suitable for being linked into a larger binary.  See the :cpp:class:`Qrack::CoherentUnit` documentation for API references, as well as the examples present in `the unit tests <https://github.com/vm6502q/qrack/blob/master/tests.cpp>`_.
+
+Performance
+~~~~~~~~~~~
+
+TBD.
+
+Contributing
+~~~~~~~~~~~~
+
+Pull requests and issues are happily welcome!
+
+Please make sure ``make format`` (depends on `clang-format-5 <https://clang.llvm.org/docs/ClangFormat.html>`_) has been executed against any PRs before being published.
+
+Community
+~~~~~~~~~
+
+Qrack and VM6502Q have a development community on the `Advanced Computing Topics <https://discord.gg/yDZBuhu>`_ discord server on channel #qrack.  Come join us!
+
+Theory
+======
+
+Foundational Material
+---------------------
+
+Quantum Bit Simulation
+----------------------
+
+Implementation
+==============
+
+:cpp:class:`Qrack::CoherentUnit`
+--------------------------------
+
+VM6502Q Opcodes
+---------------
+
+CC65
+----
+
+C Syntax Enhancements
+~~~~~~~~~~~~~~~~~~~~~
+
+
+Old Text
+========
 
 Primarily, this documentation teaches enough practical quantum computation and emulation theory that one can understand the implementation of all methods in Qrack. This introduction contains an overview of the general methods whereby Qrack implements its gate and register functionality.
 
@@ -216,8 +342,8 @@ Say we want to apply a bitwise ``NOT`` or ``X`` operation on the right-hand regi
 
 .. Syntax Highlight fixing comment: `|
 
-CoherentUnit Gate Implementations
----------------------------------
+:cpp:class:`Qrack::CoherentUnit` Gate Implementations
+-----------------------------------------------------
 
 This is again "embarrassingly parallel." Some bits are completely uninvolved and these bits are passed unchanged in each state from input to output. Bits acted on by the register operation have a one-to-one mapping between input and states. This can all be handled via transformation via bit masks on the input state permutation index.
 
@@ -238,6 +364,15 @@ The Qrack project is targeted to efficient and practical classical emulation of 
 
 Additionally, as Qrack targets classical emulation of quantum hardware, certain convenience methods can be employed in classical emulation which are not physically or practically attainable in quantum hardware, such as the "cloning" of arbitrary pure quantum states and the direct nondestructive measurement of probability and phase. Members of this limited set of convenience methods are marked "PSEUDO-QUANTUM" in the API reference and need not be employed at all.
 
-Doxygen
+API Documentation
 ===========================
-.. doxygenindex::
+
+The API documentation is contained in :doc:`api/coherent_unit`.
+
+Citations and Footnotes
+=======================
+
+.. [MOS-6502] https://en.wikipedia.org/wiki/MOS_Technology_6502
+.. [Grover] https://en.wikipedia.org/wiki/Grover%27s_algorithm
+.. [CC65] http://cc65.github.io/doc/
+

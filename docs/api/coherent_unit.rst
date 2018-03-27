@@ -2,9 +2,6 @@
 
 .. Copyright (c) 2018
 
-.. _coherent-unit-reference:
-
-
 ``CoherentUnit``
 ================
 
