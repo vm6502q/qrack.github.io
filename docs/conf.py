@@ -206,4 +206,4 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 todo_include_todos = True
 
 
-cpp_index_common_prefix = ['Qrack::', 'Qrack::CoherentUnit::', 'Qrack::Complex16Simd::']
+cpp_index_common_prefix = ['Qrack::', 'Qrack::CoherentUnit::', 'Qrack::Complex16Simd::', 'CoherentUnit::', 'Complex16Simd::']
