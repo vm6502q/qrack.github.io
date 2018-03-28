@@ -3,7 +3,7 @@
 .. Copyright (c) 2018
 
 Qrack::CoherentUnit
-================
+===================
 
 Defined in `qregister.hpp <https://github.com/vm6502q/qrack/blob/master/qregister.hpp>`_.
 
@@ -30,7 +30,12 @@ Constructors
 
 .. doxygenfunction:: CoherentUnit(const CoherentUnit&)
 
-Utility and Configuration Methods
+Members
+-------
+
+.. doxygenvariable:: stateVec
+
+Configuration Methods
 ---------------------------------
 
 .. doxygenfunction:: SetRandomSeed
@@ -127,4 +132,8 @@ Quantum Gates
 
 .. doxygenfunction:: CRZDyad(int, int, bitLenInt, bitLenInt, bitLenInt)
 
+Internal Utility Methods
+------------------------
+
+.. doxygenfunction:: Apply2x2
 
