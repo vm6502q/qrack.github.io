@@ -59,6 +59,7 @@ Finally, a `6502 toolchain <https://github.com/vm6502q/cc65>`_, based on the CC6
 
 .. toctree::
     :maxdepth: 2
+    :hidden:
 
     Introduction <self>
     start
@@ -67,6 +68,7 @@ Finally, a `6502 toolchain <https://github.com/vm6502q/cc65>`_, based on the CC6
     citations
 
 .. toctree::
+    :hidden:
     :caption: API
     :maxdepth: 2
 
