@@ -4,6 +4,20 @@ Implementation
 CoherentUnit
 --------------------------------
 
+A `Qrack::CoherentUnit` stores a set of permutation basis complex number coefficients and operates on them with bit gates and register-like methods.
+
+The state vector indicates the probability and phase of all possible pure bit permutations, numbered from :math:`0` to :math:`2^N-1`, by simple binary counting. All operations except measurement should be "unitary," except measurement. They should be representable as a unitary matrix acting on the state vector. Measurement, and methods that involve measurement, should be the only operations that break unitarity. As a rule-of-thumb, this means an operation that doesn't rely on measurement should be "reversible." That is, if a unitary operation is applied to the state, their must be a unitary operation to map back from the output to the exact input. In practice, this means that most gate and register operations entail simply direct exchange of state vector coefficients in a one-to-one manner. (Sometimes, operations involve both a one-to-one exchange and a measurement, like the `CoherentUnit::SetBit` method, or the logical comparison methods.)
+
+A single bit gate essentially acts as a :math:`2\times2` matrix between the :math:`0` and :math:`1` states of a single bits. This can be acted independently on all pairs of permutation basis state vector components where all bits are held fixed while :math:`0` and :math:`1` states are paired for the bit being acted on. This is "embarassingly parallel."
+
+To determine how state vector coefficients should be exchanged in register-wise operations, essentially, we form bitmasks that are applied to every underlying possible permutation state in the state vector, and act an appropriate bitwise transformation on them. The result of the bitwise transformation tells us which input permutation coefficients should be mapped to each output permutation coefficient. Acting a bitwise transformation on the input index in the state vector array, we return the array index for the output, and we move the double precision complex number at the input index to the output index. The transformation of the array indexes is basically the classical computational bit transformation implied by the operation. In general, this is again "embarrassingly parallel" over fixed bit values for bits that are not directly involved in the operation. To ease the process of exchanging coefficients, we allocate a new duplicate permutation state array vector, which we output values into and replace the original state vector with at the end.
+
+The act of measurement draws a random double against the probability of a bit or string of bits being in the :math:`1` state. To determine the probability of a bit being in the :math:`1` state, sum the probabilities of all permutation states where the bit is equal to :math:`1`. The probablity of a state is equal to the complex norm of its coefficient in the state vector. When the bit is determined to be :math:`1` by drawing a random number against the bit probability, all permutation coefficients for which the bit would be equal to :math:`0` are set to zero. The original probabilities of all states in which the bit is :math:`1` are added together, and every coefficient in the state vector is then divided by this total to "normalize" the probablity back to :math:`1` (or :math:`100%`).
+
+In the ideal, acting on the state vector with only unitary matrices would preserve the overall norm of the permutation state vector, such that it would always exactly equal :math:`1`, such that on. In practice, floating point error could "creep up" over many operations. To correct we this, we normalize at least immediately before (and immediately after) measurement operations. Many operations imply only measurements by either :math:`1` or :math:`0` and will therefore not introduce floating point error, but in cases where we multiply by say :math:`1/\sqrt{2}`, we can normalize proactively. In fact, to save computational overhead, since most operations entail iterating over the entire permutation state vector once, we can calculate the norm on the fly on one operation, finish with the overall normalization constant in hand, and apply the normalization constant on the next operation, thereby avoiding having to loop twice in every operation.
+
+`Qrack` has been implemented with double precision complex numbers. Use of single precision could get us basically one additional qubit, twice as many bit permutations, on the same system. However, double precision complex numbers naturally align to the width of SIMD intrinsics. It is up to the developer implementing a quantum emulator, whether precision and alignment with SIMD or else one additional qubit on a system is more important. (Depending on the case, good arguments could be made for either choice.)
+
 VM6502Q Opcodes
 ---------------
 This extension of the MOS 6502 instruction set honors all legal (as well as undocumented) opcodes of the original chip. See a reference manual on the 6502 for the classical opcodes.
@@ -12,154 +26,7 @@ The accumulator and X register are replaced with qubits. The Y register is left 
 
 The quantum mode flag takes the place of the unused flag bit in the original 6502 status flag register. When quantum mode is off, the virtual chip should function exactly like the original MOS 6502, so long as the new opcodes are not used. When the quantum mode flag is turned on, the operation of the other status flags changes. An operation that would reset the "zero," "negative," or "overflow" flags to 0 does nothing. An operation that would set these flags to 1 instead flips the phase of the quantum registers if the flags are already on. In quantum mode, these flags can all be manually set or reset with supplementary opcodes, to engage and disengage the conditional phase flip behavior. The "carry" flag functions in addition and subtraction as it does in the original 6502, though it can exist in a state of superposition. A "CoMPare" operation overloads the function of the carry flag in the original 6502. For a "CMP" instruction in the quantum 6502 extension, the carry flag analogously flips quantum phase when set, if the classical "CMP" instruction would usually set the carry flag. The intent of this flag behavior, setting and resetting them to enable conditional phase flips, is meant to enable quantum "amplitude amplification" algorithms based on the usual status flag capabilities of the original chip.
 
-Bellow is a list of new and modified opcodes with their binary and function. If an opcode description is not here to specifically state that the opcode collapses register or flag superposition, it can be assumed that it does not. However, if a (non X register indexed) instruction would overwrite the value of a register or flag, then superposition would be expected to be overwritten. If an instruction is X register indexed, then in quantum mode, it will operate according to the superposition of the X register.
-
-HAA, 0x02, (Implied addressing)
-Bitwise Hadamard on the Accumulator
-
-HAX, 0x03, (Implied addressing)
-Bitwise Hadamard on the X Register
-
-ORA, (Multiple instructions for addressing modes)
-Bitwise OR with the Accumulator, will also collapse the quantum state of the Accumulator
-
-ASL, (Multiple instructions for addressing modes)
-Arithmetic Shift Left, will also collapse superposition of the carry flag
-
-SEN, 0x0F, (Implied addressing)
-SEt the Negative flag
-
-PXA, 0x12, (Implied addressing)
-Apply a bitwise Pauli X on the Accumulator
-
-PXA, 0x13, (Implied addressing)
-Apply a bitwise Pauli X on the X Register
-
-HAC, 0x17, (Implied addressing)
-Apply a Hadamard gate on the carry flag
-
-PYA, 0x1A, (Implied addressing)
-Apply a bitwise Pauli Y on the Accumulator
-
-PYA, 0x1B, (Implied addressing)
-Apply a bitwise Pauli Y on the X Register
-
-CLQ, 0x1F, (Implied addressing)
-CLear Quantum mode flag
-
-AND, (Multiple instructions for addressing modes)
-Bitwise AND with the Accumulator, will also collapse the quantum state of the Accumulator
-
-BIT, (Multiple instructions for addressing modes)
-The 6502's test BITs opcodes, will also collapse the superposition of the Accumulator
-
-ROL, (Multiple instructions for addressing modes)
-ROtate Left, will also collapse superposition of the carry flag
-
-SEV, 0x27, (Implied addressing)
-SEt the oVerflow flag
-
-SEZ, 0x2B, (Implied addressing)
-SEt the Zero flag
-
-CLN, 0x2F, (Implied addressing)
-CLear the Negative flag
-
-PZA, 0x32, (Implied addressing)
-Apply a bitwise Pauli Z on Accumulator
-
-PZA, 0x33, (Implied addressing)
-Apply a bitwise Pauli Z on the X Register
-
-RTA, 0x3A, (Implied addressing)
-Bitwise quarter rotation on |1> axis for Accumulator
-
-RTX, 0x3B, (Implied addressing)
-Bitwise quarter rotation on |1> axis for the X Register
-
-SEQ, 0x1F, (Implied addressing)
-SEt the Quantum mode flag
-
-EOR, (Multiple instructions for addressing modes)
-Bitwise EOR with the Accumulator, will also collapse the quantum state of the Accumulator
-
-RXA, 0x42, (Implied addressing)
-Bitwise quarter rotation on X axis for Accumulator
-
-RXX, 0x43, (Implied addressing)
-Bitwise quarter rotation on X axis for the X Register
-
-LSR, (Multiple instructions for addressing modes)
-Logical Shift Right, will also collapse superposition of the carry flag
-
-CLZ, 0x47, (Implied addressing)
-CLear the Zero flag
-
-RZA, 0x5A, (Implied addressing)
-Bitwise quarter rotation on Z axis for Accumulator
-
-RZX, 0x5B, (Implied addressing)
-Bitwise quarter rotation on Z axis for the X Register
-
-RZX, 0x5B, (Implied addressing)
-Bitwise quarter rotation on Z axis for the X Register
-
-FTA, 0x62, (Implied addressing)
-Quantum Fourier Transform on Accumulator
-
-FTX, 0x63, (Implied addressing)
-Quantum Fourier Transform on the X register
-
-ADC, 0x75, (Zero page X addressing)
-ADd with Carry, Zero Page indexed, will add in superposition if the X register is superposed. Results in the Accumulator and carry flag become entangled with the X register, such that the result of the addition is entangled with the address loaded from in the X register. (Addressing past the zero page loops to the start.)
-
-ADC, 0x7D, (Absolute X addressing)
-ADd with Carry, Zero Page indexed, will add in superposition if the X register is superposed. Results in the Accumulator and carry flag become entangled with the X register, such that the result of the addition is entangled with the address loaded from in the X register.
-
-STA, (Multiple instructions for addressing modes)
-STore Accumulator, will also collapse superposition of the Accumulator
-
-TXA, 0x8A, (Implied addressing)
-Transfer X register to Accumulator, will maintain superposition of the X register, entangling it to be the same as the Accumulator when measured
-
-STX, (Multiple instructions for addressing modes)
-STore X register, will also collapse superposition of the X register
-
-TXS, 0x9A, (Implied addressing)
-Transfer X register to Stack pointer, will also collapse superposition of the X register
-
-TAY, 0xA8, (Implied addressing)
-Transfer Accumulator Y register, will also collapse superposition of the Accumulator
-
-TAX, 0x8A, (Implied addressing)
-Transfer Accumulator to X register, will maintain superposition of the Accumulator, entangling it to be the same as the X register when measured
-
-LDA, 0xB5, (Zero page X addressing)
-LoaD Accumulator, Zero Page indexed, will load in superposition if the X register is superposed. Results loaded in the Accumulator become entangled with the X register, such that the result of the load is entangled with the address loaded from in the X register. (Addressing past the zero page loops to the start.)
-
-LDA, 0xBD, (Absolute X addressing)
-LoaD Accumulator, Zero Page indexed, will load in superposition if the X register is superposed. Results loaded in the Accumulator become entangled with the X register, such that the result of the load is entangled with the address loaded from in the X register.
-
-CMP, (Multiple instructions for addressing modes)
-CoMPare accumulator. If quantum mode is off, this opcode functions as in the original 6502. If quantum mode is on, and if a flag would be set to 1 in the original system, and if this flag is already on, then this instead flips the phase of the quantum registers, for each such flag.
-
-CPX, (Multiple instructions for addressing modes)
-CoMPare X register. If quantum mode is off, this opcode functions as in the original 6502. If quantum mode is on, and if a flag would be set to 1 in the original system, and if this flag is already on, then this instead flips the phase of the quantum registers, for each such flag.
-
-SBC, 0xF5, (Zero page X addressing)
-SuBtract with Carry, Zero Page indexed, will subtract in superposition if the X register is superposed. Results in the Accumulator and carry flag become entangled with the X register, such that the result of the addition is entangled with the address loaded from in the X register. (Addressing past the zero page loops to the start.)
-
-QZZ, 0xF7, (Implied addressing)
-Apply Pauli Z operator to zero flag
-
-QZS, 0xFA, (Implied addressing)
-Apply Pauli Z operator to negative flag
-
-QZC, 0xFB, (Implied addressing)
-Apply Pauli Z operator to carry flag
-
-SBC, 0xFD, (Absolute X addressing)
-SuBtract with Carry, Zero Page indexed, will subtract in superposition if the X register is superposed. Results in the Accumulator and carry flag become entangled with the X register, such that the result of the addition is entangled with the address loaded from in the X register.
+When an operation happens that would necessarily collapse all superposition in a register or a flag, the emulator keeps track of this, so it can know when its emulation is genuinely quantum as opposed to when it is simply an emulation of a quantum computer emulating a 6502. When quantum emulation is redundant overhead on classical emulation, the emulator is aware, and it performs only the necessary classical emulation. When an operation happens that could lead to superposition, the emulator switches back over to full quantum emulation, until another operation which is guaranteed to collapse a register's state occurs.
 
 CC65
 ----

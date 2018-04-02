@@ -73,5 +73,6 @@ Finally, a `6502 toolchain <https://github.com/vm6502q/cc65>`_ - based on CC65 `
     :maxdepth: 2
 
     api/coherent_unit
+    api/6502
 
 
