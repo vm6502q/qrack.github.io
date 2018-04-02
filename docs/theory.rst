@@ -59,7 +59,7 @@ We act the ``X`` operation on the right-hand 8 bits:
 
 This is like acting a ``NOT`` operation on the right-hand 8 bits in every superposed state, in parallel, becoming this state:
 
-.. math:: \hat{X} \rvert\psi_0\rangle = \rvert\psi_1\rangle = \frac{1}{\sqrt{2}} \rvert(01010101)\ (00000001)\rangle - \frac{1}{\sqrt{2}} \rvert(10101010)\ (11111111)\rangle
+.. math:: \hat{X}_{(8,8)} \rvert\psi_0\rangle = \rvert\psi_1\rangle = \frac{1}{\sqrt{2}} \rvert(01010101)\ (00000001)\rangle - \frac{1}{\sqrt{2}} \rvert(10101010)\ (11111111)\rangle
 
 This is again an "embarrassingly parallel" operation. Some bits are completely uninvolved and these bits are passed unchanged in each state from input to output. Bits acted on by the register operation have a one-to-one mapping between input and states. This can all be handled through transformation via bit masks on the input state permutation index. Register-like methods generally all use bitmasks to separate involved bits from uninvolved bits, transform the involved bits like above, and use the bit transformation to map state vector coefficients to new positions in the vector, in a unitary manner. (Note that the operation amounts to swapping coefficients in correspondence with the bitmask transforms, not directly acting bitwise operations on the raw representation of the state itself. The state is represented as a set of double precision complex coeffecients, not bits.)
 
