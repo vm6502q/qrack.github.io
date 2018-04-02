@@ -31,8 +31,12 @@ When an operation happens that would necessarily collapse all superposition in a
 CC65
 ----
 
+An assembler for the vm6502q project has been implemented by extending the instruction set of the MOS-6502. To implement the assembler, one can duplicate an assembler implementation for the 6502 and add the new instruction symbols and binary values to the table of implemented instructions.
+
 .. _c-syntax-enhancements-ref:
 
 C Syntax Enhancements
 ~~~~~~~~~~~~~~~~~~~~~
+
+New higher level syntax extensions are under development using the CC65 C compiler for the 6502. These syntax extensions will leverage the quantum parallel LoaD Accumulator ("LDA") instruction, quantum paralell ADd with Carry ("ADC") instruction, and quantum parallel SuBtract with Carry ("SBC") instruction, as well as the amplitude amplification capabilities of vm6502q, using the modified behavior of status flags in "quantum mode." More is to follow soon.
 

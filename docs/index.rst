@@ -55,7 +55,7 @@ Qrack is a C++ quantum bit simulator, with the ability to support arbitrary numb
 
 As a demonstration of the :cpp:class:`Qrack::CoherentUnit` implementation, a MOS-6502 microprocessor [MOS-6502]_ virtual machine has been modified with a set of new opcodes supporting quantum operations.  The `vm6502q <https://github.com/vm6502q/vm6502q>`_ virtual machine exposes new integrated quantum opcodes such as Hadamard transforms and an X-indexed LDA, with the X register in superposition, across a page of memory.  An assembly example of a Grover's search with a simple oracle function is demonstrated in the `examples <https://github.com/vm6502q/examples>`_ repository.
 
-Finally, a `6502 toolchain <https://github.com/vm6502q/cc65>`_ - based on CC65 `CC65 <http://cc65.github.io/doc/>`_ - has been modified and enhanced to support both the new opcodes - for the assembler - as well as :ref:`c-syntax-enhancements-ref`.  This is performed primarily as sandbox/exploratory work to help clarify what quantum computational software engineering might look like as the hardware reaches commoditization.
+Finally, a `6502 toolchain <https://github.com/vm6502q/cc65>`_ - based on `CC65 <http://cc65.github.io/doc/>`_ - has been modified and enhanced to support both the new opcodes - for the assembler - as well as :ref:`c-syntax-enhancements-ref`.  This is performed primarily as sandbox/exploratory work to help clarify what quantum computational software engineering might look like as the hardware reaches commoditization.
 
 .. toctree::
     :maxdepth: 2
