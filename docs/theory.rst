@@ -32,8 +32,8 @@ Simulating a quantum bit takes advantage of the probabilistic nature of the meas
 .. math::
    :label: psi_prob
 
-    \rvert\psi\rangle = x_0 \rvert000\rangle + x_1 \rvert001\rangle + x_2 \rvert010\rangle + x_3 \rvert011\rangle + \
-                        x_4 \rvert100\rangle + x_5 \rvert101\rangle + x_6 \rvert110\rangle + x_7 \rvert111\rangle
+    \lvert\psi\rangle = x_0 \lvert 000\rangle + x_1 \lvert 001\rangle + x_2 \lvert 010\rangle + x_3 \lvert 011\rangle + \
+                        x_4 \lvert 100\rangle + x_5 \lvert 101\rangle + x_6 \lvert 110\rangle + x_7 \lvert 111\rangle
 
 Each of the :math:`x_n` complex numbers represents the probability of the quantum system, on measurement, resulting in a particular bit pattern.
 
@@ -49,7 +49,7 @@ Extending to register-like operations, say we want to apply a bitwise ``NOT`` or
 
 Say we have a `Qrack::CoherentUnit` called `qReg` with the following initial state:
 
-.. math:: \rvert\psi_0\rangle = \frac{1}{\sqrt{2}} \rvert(01010101)\ (11111110)\rangle - \frac{1}{\sqrt{2}} \rvert(10101010)\ (00000000)\rangle
+.. math:: \lvert\psi_0\rangle = \frac{1}{\sqrt{2}} \lvert (01010101)\ (11111110)\rangle - \frac{1}{\sqrt{2}} \lvert (10101010)\ (00000000)\rangle
 
 We act the ``X`` operation on the right-hand 8 bits:
 
@@ -59,7 +59,7 @@ We act the ``X`` operation on the right-hand 8 bits:
 
 This is like acting a ``NOT`` operation on the right-hand 8 bits in every superposed state, in parallel, becoming this state:
 
-.. math:: \hat{X}_{(8,8)} \rvert\psi_0\rangle = \rvert\psi_1\rangle = \frac{1}{\sqrt{2}} \rvert(01010101)\ (00000001)\rangle - \frac{1}{\sqrt{2}} \rvert(10101010)\ (11111111)\rangle
+.. math:: \hat{X}_{(8,8)} \lvert\psi_0\rangle = \lvert\psi_1\rangle = \frac{1}{\sqrt{2}} \lvert (01010101)\ (00000001)\rangle - \frac{1}{\sqrt{2}} \lvert (10101010)\ (11111111)\rangle
 
 This is again an "embarrassingly parallel" operation. Some bits are completely uninvolved and these bits are passed unchanged in each state from input to output. Bits acted on by the register operation have a one-to-one mapping between input and states. This can all be handled through transformation via bit masks on the input state permutation index. Register-like methods generally all use bitmasks to separate involved bits from uninvolved bits, transform the involved bits like above, and use the bit transformation to map state vector coefficients to new positions in the vector, in a unitary manner. (Note that the operation amounts to swapping coefficients in correspondence with the bitmask transforms, not directly acting bitwise operations on the raw representation of the state itself. The state is represented as a set of double precision complex coeffecients, not bits.)
 
