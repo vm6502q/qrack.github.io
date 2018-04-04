@@ -10,12 +10,11 @@ Check out each of the major repositories into a project branch:
 
           / $ mkdir qc
           / $ cd qc
-        qc/ $ for i in 'https://github.com/vm6502q/qrack.git'      \
-                       'https://github.com/vm6502q/vm6502q.git'    \
-                       'https://github.com/vm6502q/examples.git'   \
-                       'https://github.com/vm6502q/cc65.git'; do
-                git clone $i
-              done
+        qc/ $ git clone https://github.com/vm6502q/qrack.git
+        qc/ $ git clone https://github.com/vm6502q/vm6502q.git
+        qc/ $ git clone https://github.com/vm6502q/examples.git
+            # Note: the cc65 repository changes live in the 6502q branch
+        qc/ $ git clone https://github.com/vm6502q/cc65.git -b 6502q
 
             # Add a necessary symlink connecting the vm6502q project with qrack
         qc/ $ cd vm6502q && ln -s ../qrack
