@@ -27,15 +27,19 @@ Grover Search Algorithm
 Quantum Bit Simulation
 ----------------------
 
-Simulating a quantum bit takes advantage of the probabilistic nature of the measurement result of a quantum bit and records strictly the complex number probability for each of the bits in a coherent state.  Thus, a two qubit system which can be expressed through the following equation:
+Simulating a quantum bit takes advantage of the probabilistic nature of the measurement result of a quantum bit and records strictly the complex number amplitude for each of the possible qubit outcomes in a coherent state.  Thus, a two qubit system which can be expressed through the following equation:
 
 .. math::
-   :label: 3qb_prob
+   :label: 3qb_amp
 
     \lvert\psi\rangle = x_0 \lvert 000\rangle + x_1 \lvert 001\rangle + x_2 \lvert 010\rangle + x_3 \lvert 011\rangle + \
                         x_4 \lvert 100\rangle + x_5 \lvert 101\rangle + x_6 \lvert 110\rangle + x_7 \lvert 111\rangle
 
-Each of the :math:`x_n` complex numbers represents the probability of the quantum system, on measurement, resulting in a particular bit pattern.
+Each of the :math:`x_n` complex numbers represents the amplitudes of the quantum system, on measurement, resulting in a particular bit pattern.  While a real quantum mechanical system would produce probabilistic measurements based on these amplitudes, a simulation like this is deterministic.
+
+.. note:: **Probability vs Amplitude**
+
+	It's a common misrepresentation to consider the :math:`x_n` `eigenstate <http://farside.ph.utexas.edu/teaching/qmech/Quantum/node40.html>`_ as a *probability* rather than an *amplitude*.  The root of this misrepresentation lies in the measurement operation, which collapses the amplitude in a non-unitary fashion, resulting in a probabilistic result.  But the :math:`x_n` eigenstates are not probabilistic values - rather, they are the amplitude times a complex `phase factor <https://en.wikipedia.org/wiki/Phase_factor>`_.  In this document, we will refer to the eigenstates as amplitudes, and values obtained post-measurement as probabilistic.
 
 By collecting :math:`x_n` into a complex number array (called :cpp:member:`Qrack::CoherentUnit::stateVec`), the full quantum representation of the system can be recorded using :math:`2^N` *complex* variables per quantum bit:
 
@@ -43,7 +47,7 @@ By collecting :math:`x_n` into a complex number array (called :cpp:member:`Qrack
 
     std::unique_ptr<Complex16[]> sv(new Complex16[1 << qBitCount]);
 
-Before proceeding further, let's take a small digression into gate theory.  Given a standard :math:`X` gate matrix,
+Given a standard :math:`X` gate matrix,
 
 .. math::
     :label: x_gate
@@ -53,7 +57,7 @@ Before proceeding further, let's take a small digression into gate theory.  Give
       1 & 0
     \end{bmatrix}
 
-a question arises: how can this :math:`2\times2` matrix be applied against the :math:`1xN` matrix for N arbitrary entangled qubits, where the matrix is the :math:`x_n` probabilities from :eq:`3qb_prob`?
+a question arises: how can this :math:`2\times2` matrix be applied against the :math:`1xN` matrix for N arbitrary entangled qubits, where the matrix is the :math:`x_n` amplitudes from :eq:`3qb_amp`?
 
 .. math::
 
@@ -158,9 +162,9 @@ The solution here is to apply a `Kronecker product <https://en.wikipedia.org/wik
       x_{110}
     \end{bmatrix}
 
-The equation :eq:`x_3bit` inverts the probability of the first bit out of three, but leave the second and third bits alone.  Using the identity matrix :math:`I` preserves the probabilities of the :math:`x_{0nn}` and :math:`x_{1nn}` positions.  The expanded matrix in :eq:`x_3bit_3` now has the proper dimensionality to be multiplied directly against the probability matrix.
+The equation :eq:`x_3bit` inverts the amplitudes of the first bit out of three, but leave the second and third bits alone.  Using the identity matrix :math:`I` preserves the amplitudes of the :math:`x_{0nn}` and :math:`x_{1nn}` positions.  The expanded matrix in :eq:`x_3bit_3` now has the proper dimensionality to be multiplied directly against the amplitude matrix.
 
-.. note:: It's important to remember here that, unlike a classical :math:`NOT` which directly inverts a bit, the :math:`X` gate swaps the *probabilities* for the states where the qubit is 1 with the probabilities where the qubit is 0.  So while :math:`x_{000}` and :math:`x_{100}` have particular complex number values, the position in the matrix :math:`M[0]` will always correspond to the probability :math:`x_0` in :eq:`3qb_prob`.  If the value of :math:`M[0]` is :math:`x_{100}`, then the probability of the system, on measurement, resulting in :math:`\rvert000\rangle` is equal to the probability that the system, prior to the :math:`X` gate, would have resulted in :math:`\rvert100\rangle`.  See `Quantum Logic Gates <https://en.wikipedia.org/wiki/Quantum_logic_gate#Circuit_composition_and_entangled_states>`_ for more information.
+.. note:: It's important to remember here that, unlike a classical :math:`NOT` which directly inverts a bit, the :math:`X` gate swaps the *amplitudes* for the states where the qubit is 1 with the amplitudes where the qubit is 0.  So while :math:`x_{000}` and :math:`x_{100}` have particular complex number values, the position in the matrix :math:`M[0]` will always correspond to the amplitude :math:`x_0` in :eq:`3qb_amp`.  If the value of :math:`M[0]` is :math:`x_{100}`, then the amplitude of the system, on measurement, resulting in :math:`\rvert000\rangle` is equal to the amplitude that the system, prior to the :math:`X` gate, would have resulted in :math:`\rvert100\rangle`.  See `Quantum Logic Gates <https://en.wikipedia.org/wiki/Quantum_logic_gate#Circuit_composition_and_entangled_states>`_ for more information.
 
 Implementing this simplistically would, as illustrated above in :eq:`x_3bit_3`, require matrices sized at :math:`2^{2x}`, where :math:`x` is the number of qubits the gate operates on.  This rapidly grows prohibitive in memory usage, and is the primary limitation for simulating quantum systems using classical components.  Happily, these types of matrix operations lend themselves particularly well to both memory optimization as well as parallelization of computational cost.
 
