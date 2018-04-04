@@ -5,7 +5,7 @@ MOS-6502Q Opcodes
 Bellow is a list of new and modified opcodes with their binary and function. If an opcode description is not here to specifically state that the opcode collapses register or flag superposition, it can be assumed that it does not. However, if a (non X register indexed instruction would overwrite the value of a register or flag, then superposition would be expected to be overwritten. If an instruction is X register indexed, then in quantum mode, it will operate according to the superposition of the X register.
 
 .. list-table:: 6502Q New Opcodes
-    :widths: auto
+    :widths: 10 10 20 70
     :header-rows: 1
 
     * - OP
