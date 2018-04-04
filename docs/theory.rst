@@ -30,7 +30,7 @@ Quantum Bit Simulation
 Simulating a quantum bit takes advantage of the probabilistic nature of the measurement result of a quantum bit and records strictly the complex number probability for each of the bits in a coherent state.  Thus, a two qubit system which can be expressed through the following equation:
 
 .. math::
-   :label: psi_prob
+   :label: 3qb_prob
 
     \lvert\psi\rangle = x_0 \lvert 000\rangle + x_1 \lvert 001\rangle + x_2 \lvert 010\rangle + x_3 \lvert 011\rangle + \
                         x_4 \lvert 100\rangle + x_5 \lvert 101\rangle + x_6 \lvert 110\rangle + x_7 \lvert 111\rangle
@@ -43,29 +43,244 @@ By collecting :math:`x_n` into a complex number array (called :cpp:member:`Qrack
 
     std::unique_ptr<Complex16[]> sv(new Complex16[1 << qBitCount]);
 
-The :cpp:func:`Qrack::CoherentUnit::Apply2x2()` method applies a :math:`2\times2` matrix against the state vector, for example from an :cpp:func:`Qrack::CoherentUnit::X()` gate. If we apply a gate only to the second bit, then the :math:`2\times2` matrix operation is acted in parallel pairings of all states where all bits are the same except for the second bit. Pairs of states where all bits are the same, except the second bit pairs values of `0` and `1`, can be independently acted on by the :math:`2\times2` matrix in parallel. For example, for two bits, acting on the right-hand bit, the pairings would be :math:`\rvert00\rangle` with :math:`\rvert01\rangle`, and :math:`\rvert10\rangle` with :math:`\rvert11\rangle`. Uninvolved bits are held the same and iterated over, while the bit acted upon is drawn into pairs `0` and `1`. This gives a set of sub-state vectors with only two components, which can be multiplied by the :math:`2\times2` matrix.
+Before proceeding further, let's take a small digression into gate theory.  Given a standard :math:`X` gate matrix,
 
-Extending to register-like operations, say we want to apply a bitwise ``NOT`` or ``X`` operation on the right-hand register of 8 bits. We simply apply the ``NOT`` operation simultaneously on all of the right-hand bits in all entangled input states.
+.. math::
+    :label: x_gate
 
-Say we have a `Qrack::CoherentUnit` called `qReg` with the following initial state:
+    \begin{bmatrix}
+      0 & 1 \\
+      1 & 0
+    \end{bmatrix}
 
-.. math:: \lvert\psi_0\rangle = \frac{1}{\sqrt{2}} \lvert (01010101)\ (11111110)\rangle - \frac{1}{\sqrt{2}} \lvert (10101010)\ (00000000)\rangle
+a question arises: how can this :math:`2\times2` matrix be applied against the :math:`1xN` matrix for N arbitrary entangled qubits, where the matrix is the :math:`x_n` probabilities from :eq:`3qb_prob`?
 
-We act the ``X`` operation on the right-hand 8 bits:
+.. math::
+
+    \begin{bmatrix}
+      0 & 1 \\
+      1 & 0
+    \end{bmatrix} ???
+    \begin{bmatrix}
+      x_{000} \\
+      x_{001} \\
+      x_{010} \\
+      x_{011} \\
+      x_{100} \\
+      x_{101} \\
+      x_{110} \\
+      x_{111}
+    \end{bmatrix}
+
+The solution here is to apply a `Kronecker product <https://en.wikipedia.org/wiki/Kronecker_product>`_ to the gate matrix.  This expands the matrix out to the appropriate number of dimensions - in this case we would need to perform two Kronecker products for each of the two bits whose values are irrelevant to the result:
+
+.. math::
+    :label: x_3bit
+
+    (X \otimes I \otimes I) \times M
+
+.. math::
+    :label: x_3bit_2
+
+    (\begin{bmatrix}
+      0 & 1 \\\
+      1 & 0
+    \end{bmatrix}
+    \otimes
+    \begin{bmatrix}
+      1 & 0 \\\
+      0 & 1
+    \end{bmatrix}
+    \otimes
+    \begin{bmatrix}
+      1 & 0 \\\
+      0 & 1
+    \end{bmatrix}) \times
+    \begin{bmatrix}
+      x_{000} \\
+      x_{001} \\
+      x_{010} \\
+      x_{011} \\
+      x_{100} \\
+      x_{101} \\
+      x_{110} \\
+      x_{111}
+    \end{bmatrix}
+
+.. math::
+    :label: x_3bit_3
+
+    \begin{bmatrix}
+      0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+      1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+      0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+      0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+      0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+      0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+      0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+      0 & 0 & 0 & 0 & 0 & 0 & 1 & 0
+    \end{bmatrix}
+    \times
+    \begin{bmatrix}
+      x_{000} \\
+      x_{001} \\
+      x_{010} \\
+      x_{011} \\
+      x_{100} \\
+      x_{101} \\
+      x_{110} \\
+      x_{111}
+    \end{bmatrix}
+
+.. math::
+  :label: x_3bit_final
+
+    (X \otimes I \otimes I) \times 
+    \begin{bmatrix}
+      x_{000} \\
+      x_{001} \\
+      x_{010} \\
+      x_{011} \\
+      x_{100} \\
+      x_{101} \\
+      x_{110} \\
+      x_{111}
+    \end{bmatrix}
+    = 
+    \begin{bmatrix}
+      x_{001} \\
+      x_{000} \\
+      x_{011} \\
+      x_{010} \\
+      x_{101} \\
+      x_{100} \\
+      x_{111} \\
+      x_{110}
+    \end{bmatrix}
+
+The equation :eq:`x_3bit` inverts the probability of the first bit out of three, but leave the second and third bits alone.  Using the identity matrix :math:`I` preserves the probabilities of the :math:`x_{0nn}` and :math:`x_{1nn}` positions.  The expanded matrix in :eq:`x_3bit_3` now has the proper dimensionality to be multiplied directly against the probability matrix.
+
+.. note:: It's important to remember here that, unlike a classical :math:`NOT` which directly inverts a bit, the :math:`X` gate swaps the *probabilities* for the states where the qubit is 1 with the probabilities where the qubit is 0.  So while :math:`x_{000}` and :math:`x_{100}` have particular complex number values, the position in the matrix :math:`M[0]` will always correspond to the probability :math:`x_0` in :eq:`3qb_prob`.  If the value of :math:`M[0]` is :math:`x_{100}`, then the probability of the system, on measurement, resulting in :math:`\rvert000\rangle` is equal to the probability that the system, prior to the :math:`X` gate, would have resulted in :math:`\rvert100\rangle`.  See `Quantum Logic Gates <https://en.wikipedia.org/wiki/Quantum_logic_gate#Circuit_composition_and_entangled_states>`_ for more information.
+
+Implementing this simplistically would, as illustrated above in :eq:`x_3bit_3`, require matrices sized at :math:`2^{2x}`, where :math:`x` is the number of qubits the gate operates on.  This rapidly grows prohibitive in memory usage, and is the primary limitation for simulating quantum systems using classical components.  Happily, these types of matrix operations lend themselves particularly well to both memory optimization as well as parallelization of computational cost.
+
+There are two immediate optimizations that can be performed.  The first is an optimization on the matrix size: by performing the math with only a :math:`2\times2` matrix, the amount of memory allocated is substantially reduced. The :cpp:func:`Qrack::CoherentUnit::Apply2x2()` method utilizes this optimization.
+
+Mechanically, this performs the following mathematical operations:
+
+.. math::
+    :label: x_3bit_opt
+
+    \begin{bmatrix}
+      {
+        \begin{bmatrix}
+          0 & 1
+        \end{bmatrix}
+        \times
+        \begin{bmatrix}
+          x_{000} \\
+          x_{001}
+        \end{bmatrix}
+      } \\
+      {
+        \begin{bmatrix}
+          1 & 0
+        \end{bmatrix}
+        \times
+        \begin{bmatrix}
+          x_{000} \\
+          x_{001}
+        \end{bmatrix}
+      } \\
+      {
+        \begin{bmatrix}
+          0 & 1
+        \end{bmatrix}
+        \times
+        \begin{bmatrix}
+          x_{010} \\
+          x_{011}
+        \end{bmatrix}
+      } \\
+      {
+        \begin{bmatrix}
+          1 & 0
+        \end{bmatrix}
+        \times
+        \begin{bmatrix}
+          x_{010} \\
+          x_{011}
+        \end{bmatrix}
+      } \\
+      {
+        \begin{bmatrix}
+          0 & 1
+        \end{bmatrix}
+        \times
+        \begin{bmatrix}
+          x_{100} \\
+          x_{101}
+        \end{bmatrix}
+      } \\
+      {
+        \begin{bmatrix}
+          1 & 0
+        \end{bmatrix}
+        \times
+        \begin{bmatrix}
+          x_{100} \\
+          x_{101}
+        \end{bmatrix}
+      } \\
+      {
+        \begin{bmatrix}
+          0 & 1
+        \end{bmatrix}
+        \times
+        \begin{bmatrix}
+          x_{110} \\
+          x_{111}
+        \end{bmatrix}
+      } \\
+      {
+        \begin{bmatrix}
+          1 & 0
+        \end{bmatrix}
+        \times
+        \begin{bmatrix}
+          x_{110} \\
+          x_{111}
+        \end{bmatrix}
+      }
+    \end{bmatrix}
+    = 
+    \begin{bmatrix}
+      x_{001} \\
+      x_{000} \\
+      x_{011} \\
+      x_{010} \\
+      x_{101} \\
+      x_{100} \\
+      x_{111} \\
+      x_{110}
+    \end{bmatrix}
+
+It's worth pointing out that the operation detailed in :eq:`x_3bit_opt` is heavily parallelize-able, yielding substantial benefits when working with gates spanning more than just one register (e.g. :math:`CNOT` and :math:`CCNOT` gates).  In C++, this would be implemented like so:
 
 .. code-block:: cpp
 
-    qReg->X(8, 8);
+    // Create a three qubit register.
+    Qrack::CoherentUnit qReg(3);
 
-This is like acting a ``NOT`` operation on the right-hand 8 bits in every superposed state, in parallel, becoming this state:
+    // X-gate the bit at index 0
+    qReg->X(0);
 
-.. math:: \hat{X}_{(8,8)} \lvert\psi_0\rangle = \lvert\psi_1\rangle = \frac{1}{\sqrt{2}} \lvert (01010101)\ (00000001)\rangle - \frac{1}{\sqrt{2}} \lvert (10101010)\ (11111111)\rangle
-
-This is again an "embarrassingly parallel" operation. Some bits are completely uninvolved and these bits are passed unchanged in each state from input to output. Bits acted on by the register operation have a one-to-one mapping between input and states. This can all be handled through transformation via bit masks on the input state permutation index. Register-like methods generally all use bitmasks to separate involved bits from uninvolved bits, transform the involved bits like above, and use the bit transformation to map state vector coefficients to new positions in the vector, in a unitary manner. (Note that the operation amounts to swapping coefficients in correspondence with the bitmask transforms, not directly acting bitwise operations on the raw representation of the state itself. The state is represented as a set of double precision complex coeffecients, not bits.)
-
+The second optimization is one of combining sequential gates into a single matrix, allowing for a reduction in both matrix size and computational cost.  See IBM's `article <https://www.ibm.com/blogs/research/2017/10/quantum-computing-barrier/>`_ and related `publication <https://arxiv.org/abs/1710.05867>`_ for details on how to optimize these operations in more detail.  The :cpp:class:`Qrack::CoherentUnit` register-wide operations (e.g. :cpp:func:`Qrack::CoherentUnit::X`) leverage these types of optimizations, with parallelization provided through threading and OpenCL, as supported.
 
 6502 Reference Documents
 ------------------------
 
 .. [MOS-6502] The 6502 CPU - https://en.wikipedia.org/wiki/MOS_Technology_6502
 .. [6502ASM] 6502 Assembly Reference - http://www.6502.org/tutorials/6502opcodes.html
+
+For details on the added opcodes supported by vm6502q, see :ref:`mos-6502q-opcodes`.

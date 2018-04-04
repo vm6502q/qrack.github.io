@@ -1,151 +1,245 @@
-VM6502Q Opcodes
-===============
-Bellow is a list of new and modified opcodes with their binary and function. If an opcode description is not here to specifically state that the opcode collapses register or flag superposition, it can be assumed that it does not. However, if a (non X register indexed) instruction would overwrite the value of a register or flag, then superposition would be expected to be overwritten. If an instruction is X register indexed, then in quantum mode, it will operate according to the superposition of the X register.
+.. _mos-6502q-opcodes:
 
-HAA, 0x02, (Implied addressing)
-Bitwise Hadamard on the Accumulator
+MOS-6502Q Opcodes
+=================
+Bellow is a list of new and modified opcodes with their binary and function. If an opcode description is not here to specifically state that the opcode collapses register or flag superposition, it can be assumed that it does not. However, if a (non X register indexed instruction would overwrite the value of a register or flag, then superposition would be expected to be overwritten. If an instruction is X register indexed, then in quantum mode, it will operate according to the superposition of the X register.
 
-HAX, 0x03, (Implied addressing)
-Bitwise Hadamard on the X Register
+.. list-table:: 6502Q New Opcodes
+    :widths: auto
+    :header-rows: 1
 
-SEN, 0x0F, (Implied addressing)
-SEt the Negative flag
+    * - OP
+      - Byte
+      - Mode
+      - Description
 
-PXA, 0x12, (Implied addressing)
-Apply a bitwise Pauli X on the Accumulator
+    * - HAA
+      - 0x02
+      - Implied
+      - Bitwise Hadamard on the Accumulator
 
-PXA, 0x13, (Implied addressing)
-Apply a bitwise Pauli X on the X Register
+    * - HAX
+      - 0x03
+      - Implied
+      - Bitwise Hadamard on the X Register
 
-HAC, 0x17, (Implied addressing)
-Apply a Hadamard gate on the carry flag
+    * - SEN
+      - 0x0F
+      - Implied
+      - SEt the Negative flag
 
-PYA, 0x1A, (Implied addressing)
-Apply a bitwise Pauli Y on the Accumulator
+    * - PXA
+      - 0x12
+      - Implied
+      - Apply a bitwise Pauli X on the Accumulator
 
-PYA, 0x1B, (Implied addressing)
-Apply a bitwise Pauli Y on the X Register
+    * - PXA
+      - 0x13
+      - Implied
+      - Apply a bitwise Pauli X on the X Register
 
-CLQ, 0x1F, (Implied addressing)
-CLear Quantum mode flag
+    * - HAC
+      - 0x17
+      - Implied
+      - Apply a Hadamard gate on the carry flag
 
-SEV, 0x27, (Implied addressing)
-SEt the oVerflow flag
+    * - PYA
+      - 0x1A
+      - Implied
+      - Apply a bitwise Pauli Y on the Accumulator
 
-SEZ, 0x2B, (Implied addressing)
-SEt the Zero flag
+    * - PYA
+      - 0x1B
+      - Implied
+      - Apply a bitwise Pauli Y on the X Register
 
-CLN, 0x2F, (Implied addressing)
-CLear the Negative flag
+    * - CLQ
+      - 0x1F
+      - Implied
+      - CLear Quantum mode flag
 
-PZA, 0x32, (Implied addressing)
-Apply a bitwise Pauli Z on Accumulator
+    * - SEV
+      - 0x27
+      - Implied
+      - SEt the oVerflow flag
 
-PZA, 0x33, (Implied addressing)
-Apply a bitwise Pauli Z on the X Register
+    * - SEZ
+      - 0x2B
+      - Implied
+      - SEt the Zero flag
 
-RTA, 0x3A, (Implied addressing)
-Bitwise quarter rotation on |1> axis for Accumulator
+    * - CLN
+      - 0x2F
+      - Implied
+      - CLear the Negative flag
 
-RTX, 0x3B, (Implied addressing)
-Bitwise quarter rotation on |1> axis for the X Register
+    * - PZA
+      - 0x32
+      - Implied
+      - Apply a bitwise Pauli Z on Accumulator
 
-SEQ, 0x1F, (Implied addressing)
-SEt the Quantum mode flag
+    * - PZA
+      - 0x33
+      - Implied
+      - Apply a bitwise Pauli Z on the X Register
 
-RXA, 0x42, (Implied addressing)
-Bitwise quarter rotation on X axis for Accumulator
+    * - RTA
+      - 0x3A
+      - Implied
+      - Bitwise quarter rotation on :math:`\rvert1\rangle` axis for Accumulator
 
-RXX, 0x43, (Implied addressing)
-Bitwise quarter rotation on X axis for the X Register
+    * - RTX
+      - 0x3B
+      - Implied
+      - Bitwise quarter rotation on :math:`\rvert1\rangle` axis for the X Register
 
-CLZ, 0x47, (Implied addressing)
-CLear the Zero flag
+    * - SEQ
+      - 0x1F
+      - Implied
+      - SEt the Quantum mode flag
 
-RZA, 0x5A, (Implied addressing)
-Bitwise quarter rotation on Z axis for Accumulator
+    * - RXA
+      - 0x42
+      - Implied
+      - Bitwise quarter rotation on X axis for Accumulator
 
-RZX, 0x5B, (Implied addressing)
-Bitwise quarter rotation on Z axis for the X Register
+    * - RXX
+      - 0x43
+      - Implied
+      - Bitwise quarter rotation on X axis for the X Register
 
-RZX, 0x5B, (Implied addressing)
-Bitwise quarter rotation on Z axis for the X Register
+    * - CLZ
+      - 0x47
+      - Implied
+      - CLear the Zero flag
 
-FTA, 0x62, (Implied addressing)
-Quantum Fourier Transform on Accumulator
+    * - RZA
+      - 0x5A
+      - Implied
+      - Bitwise quarter rotation on Z axis for Accumulator
 
-FTX, 0x63, (Implied addressing)
-Quantum Fourier Transform on the X register
+    * - RZX
+      - 0x5B
+      - Implied
+      - Bitwise quarter rotation on Z axis for the X Register
 
-ADC, 0x75, (Zero page X addressing)
-ADd with Carry, Zero Page indexed, will add in superposition if the X register is superposed. Results in the Accumulator and carry flag become entangled with the X register, such that the result of the addition is entangled with the address loaded from in the X register. (Addressing past the zero page loops to the start.)
+    * - RZX
+      - 0x5B
+      - Implied
+      - Bitwise quarter rotation on Z axis for the X Register
 
-ADC, 0x7D, (Absolute X addressing)
-ADd with Carry, Zero Page indexed, will add in superposition if the X register is superposed. Results in the Accumulator and carry flag become entangled with the X register, such that the result of the addition is entangled with the address loaded from in the X register.
+    * - FTA
+      - 0x62
+      - Implied
+      - Quantum Fourier Transform on Accumulator
 
-TXA, 0x8A, (Implied addressing)
-Transfer X register to Accumulator, will maintain superposition of the X register, entangling it to be the same as the Accumulator when measured
+    * - FTX
+      - 0x63
+      - Implied
+      - Quantum Fourier Transform on the X register
 
-TXS, 0x9A, (Implied addressing)
-Transfer X register to Stack pointer, will also collapse superposition of the X register
+    * - ADC
+      - 0x75
+      - Zero page X addressing
+      - ADd with Carry, Zero Page indexed, will add in superposition if the X register is superposed. Results in the Accumulator and carry flag become entangled with the X register, such that the result of the addition is entangled with the address loaded from in the X register. (Addressing past the zero page loops to the start.
 
-TAY, 0xA8, (Implied addressing)
-Transfer Accumulator Y register, will also collapse superposition of the Accumulator
+    * - ADC
+      - 0x7D
+      - Absolute X addressing
+      - ADd with Carry, Zero Page indexed, will add in superposition if the X register is superposed. Results in the Accumulator and carry flag become entangled with the X register, such that the result of the addition is entangled with the address loaded from in the X register.
 
-TAX, 0x8A, (Implied addressing)
-Transfer Accumulator to X register, will maintain superposition of the Accumulator, entangling it to be the same as the X register when measured
+    * - TXA
+      - 0x8A
+      - Implied
+      - Transfer X register to Accumulator, will maintain superposition of the X register, entangling it to be the same as the Accumulator when measured
 
-LDA, 0xB5, (Zero page X addressing)
-LoaD Accumulator, Zero Page indexed, will load in superposition if the X register is superposed. Results loaded in the Accumulator become entangled with the X register, such that the result of the load is entangled with the address loaded from in the X register. (Addressing past the zero page loops to the start.)
+    * - TXS
+      - 0x9A
+      - Implied
+      - Transfer X register to Stack pointer, will also collapse superposition of the X register
 
-LDA, 0xBD, (Absolute X addressing)
-LoaD Accumulator, Zero Page indexed, will load in superposition if the X register is superposed. Results loaded in the Accumulator become entangled with the X register, such that the result of the load is entangled with the address loaded from in the X register.
+    * - TAY
+      - 0xA8
+      - Implied
+      - Transfer Accumulator Y register, will also collapse superposition of the Accumulator
 
-SBC, 0xF5, (Zero page X addressing)
-SuBtract with Carry, Zero Page indexed, will subtract in superposition if the X register is superposed. Results in the Accumulator and carry flag become entangled with the X register, such that the result of the addition is entangled with the address loaded from in the X register. (Addressing past the zero page loops to the start.)
+    * - TAX
+      - 0x8A
+      - Implied
+      - Transfer Accumulator to X register, will maintain superposition of the Accumulator, entangling it to be the same as the X register when measured
 
-QZZ, 0xF7, (Implied addressing)
-Apply Pauli Z operator to zero flag
+    * - LDA
+      - 0xB5
+      - Zero page X addressing
+      - LoaD Accumulator, Zero Page indexed, will load in superposition if the X register is superposed. Results loaded in the Accumulator become entangled with the X register, such that the result of the load is entangled with the address loaded from in the X register. (Addressing past the zero page loops to the start.
 
-QZS, 0xFA, (Implied addressing)
-Apply Pauli Z operator to negative flag
+    * - LDA
+      - 0xBD
+      - Absolute X addressing
+      - LoaD Accumulator, Zero Page indexed, will load in superposition if the X register is superposed. Results loaded in the Accumulator become entangled with the X register, such that the result of the load is entangled with the address loaded from in the X register.
 
-QZC, 0xFB, (Implied addressing)
-Apply Pauli Z operator to carry flag
+    * - SBC
+      - 0xF5
+      - Zero page X addressing
+      - SuBtract with Carry, Zero Page indexed, will subtract in superposition if the X register is superposed. Results in the Accumulator and carry flag become entangled with the X register, such that the result of the addition is entangled with the address loaded from in the X register. (Addressing past the zero page loops to the start.
 
-SBC, 0xFD, (Absolute X addressing)
-SuBtract with Carry, Zero Page indexed, will subtract in superposition if the X register is superposed. Results in the Accumulator and carry flag become entangled with the X register, such that the result of the addition is entangled with the address loaded from in the X register.
+    * - QZZ
+      - 0xF7
+      - Implied
+      - Apply Pauli Z operator to zero flag
 
-AND, (Multiple instructions for addressing modes)
-Bitwise AND with the Accumulator, will also collapse the quantum state of the Accumulator
+    * - QZS
+      - 0xFA
+      - Implied
+      - Apply Pauli Z operator to negative flag
 
-ASL, (Multiple instructions for addressing modes)
-Arithmetic Shift Left, will also collapse superposition of the carry flag
+    * - QZC
+      - 0xFB
+      - Implied
+      - Apply Pauli Z operator to carry flag
 
-BIT, (Multiple instructions for addressing modes)
-The 6502's test BITs opcodes, will also collapse the superposition of the Accumulator
+    * - SBC
+      - 0xFD
+      - Absolute X addressing
+      - SuBtract with Carry, Zero Page indexed, will subtract in superposition if the X register is superposed. Results in the Accumulator and carry flag become entangled with the X register, such that the result of the addition is entangled with the address loaded from in the X register.
 
-CMP, (Multiple instructions for addressing modes)
-CoMPare accumulator. If quantum mode is off, this opcode functions as in the original 6502. If quantum mode is on, and if a flag would be set to 1 in the original system, and if this flag is already on, then this instead flips the phase of the quantum registers, for each such flag.
+.. list-table:: 6502Q Modified Opcodes
+    :widths: auto
+    :header-rows: 1
 
-CPX, (Multiple instructions for addressing modes)
-CoMPare X register. If quantum mode is off, this opcode functions as in the original 6502. If quantum mode is on, and if a flag would be set to 1 in the original system, and if this flag is already on, then this instead flips the phase of the quantum registers, for each such flag.
+    * - OP
+      - Description
 
-EOR, (Multiple instructions for addressing modes)
-Bitwise EOR with the Accumulator, will also collapse the quantum state of the Accumulator
+    * - AND
+      - Bitwise AND with the Accumulator, will also collapse the quantum state of the Accumulator
 
-LSR, (Multiple instructions for addressing modes)
-Logical Shift Right, will also collapse superposition of the carry flag
+    * - ASL
+      - Arithmetic Shift Left, will also collapse superposition of the carry flag
 
-ORA, (Multiple instructions for addressing modes)
-Bitwise OR with the Accumulator, will also collapse the quantum state of the Accumulator
+    * - BIT
+      - The 6502's test BITs opcodes, will also collapse the superposition of the Accumulator
 
-ROL, (Multiple instructions for addressing modes)
-ROtate Left, will also collapse superposition of the carry flag
+    * - CMP
+      - CoMPare accumulator. If quantum mode is off, this opcode functions as in the original 6502. If quantum mode is on, and if a flag would be set to 1 in the original system, and if this flag is already on, then this instead flips the phase of the quantum registers, for each such flag.
 
-STA, (Multiple instructions for addressing modes)
-STore Accumulator, will also collapse superposition of the Accumulator
+    * - CPX
+      - CoMPare X register. If quantum mode is off, this opcode functions as in the original 6502. If quantum mode is on, and if a flag would be set to 1 in the original system, and if this flag is already on, then this instead flips the phase of the quantum registers, for each such flag.
 
-STX, (Multiple instructions for addressing modes)
-STore X register, will also collapse superposition of the X register
+    * - EOR
+      - Bitwise EOR with the Accumulator, will also collapse the quantum state of the Accumulator
+
+    * - LSR
+      - Logical Shift Right, will also collapse superposition of the carry flag
+
+    * - ORA
+      - Bitwise OR with the Accumulator, will also collapse the quantum state of the Accumulator
+
+    * - ROL
+      - ROtate Left, will also collapse superposition of the carry flag
+
+    * - STA
+      - STore Accumulator, will also collapse superposition of the Accumulator
+
+    * - STX
+      - STore X register, will also collapse superposition of the X register
 
