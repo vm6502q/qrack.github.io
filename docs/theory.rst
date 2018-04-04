@@ -170,94 +170,171 @@ Implementing this simplistically would, as illustrated above in :eq:`x_3bit_3`, 
 
 There are two immediate optimizations that can be performed.  The first is an optimization on the matrix size: by performing the math with only a :math:`2\times2` matrix, the amount of memory allocated is substantially reduced. The :cpp:func:`Qrack::CoherentUnit::Apply2x2()` method utilizes this optimization.
 
-Mechanically, this performs the following mathematical operations:
+In shorthand for clarity, an optimized :math:`X` gate is calculated using the following linear algebra:
 
 .. math::
-    :label: x_3bit_opt
+  :label: x_3bit_opt
 
+  \begin{bmatrix}
+    {
+       \begin{bmatrix}
+          0 & 1 \\
+          1 & 0
+       \end{bmatrix}
+       \times
+        \begin{bmatrix}
+            x_{000} \\
+            x_{001}
+        \end{bmatrix}
+    }\\
+    {
+       \begin{bmatrix}
+          0 & 1 \\
+          1 & 0
+       \end{bmatrix}
+       \times
+        \begin{bmatrix}
+            x_{010} \\
+            x_{011}
+        \end{bmatrix}
+    }\\
+    {
+       \begin{bmatrix}
+          0 & 1 \\
+          1 & 0
+       \end{bmatrix}
+       \times
+        \begin{bmatrix}
+            x_{100} \\
+            x_{101}
+        \end{bmatrix}
+    }\\
+    {
+       \begin{bmatrix}
+          0 & 1 \\
+          1 & 0
+       \end{bmatrix}
+       \times
+        \begin{bmatrix}
+            x_{110} \\
+            x_{111}
+        \end{bmatrix}
+    }
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+      {
+        \begin{bmatrix}
+          x_{001} \\
+          x_{000}
+        \end{bmatrix}
+      } \\
+      {
+        \begin{bmatrix}
+          x_{011} \\
+          x_{010}
+        \end{bmatrix}
+      } \\
+      {
+        \begin{bmatrix}
+          x_{101} \\
+          x_{100}
+        \end{bmatrix}
+      } \\
+      {
+        \begin{bmatrix}
+          x_{111} \\
+          x_{110}
+        \end{bmatrix}
+      }
+  \end{bmatrix}
+
+And, fully decomposing :eq:`x_3bit_opt`:
+
+.. math::
     \begin{bmatrix}
       {
         \begin{bmatrix}
-          0 & 1
+            0 & 1
         \end{bmatrix}
         \times
         \begin{bmatrix}
-          x_{000} \\
-          x_{001}
+            x_{000} \\
+            x_{001}
         \end{bmatrix}
       } \\
       {
         \begin{bmatrix}
-          1 & 0
+            1 & 0
         \end{bmatrix}
         \times
         \begin{bmatrix}
-          x_{000} \\
-          x_{001}
+            x_{000} \\
+            x_{001}
         \end{bmatrix}
       } \\
       {
         \begin{bmatrix}
-          0 & 1
+            0 & 1
         \end{bmatrix}
         \times
         \begin{bmatrix}
-          x_{010} \\
-          x_{011}
+            x_{010} \\
+            x_{011}
         \end{bmatrix}
       } \\
       {
         \begin{bmatrix}
-          1 & 0
+            1 & 0
         \end{bmatrix}
         \times
         \begin{bmatrix}
-          x_{010} \\
-          x_{011}
+            x_{010} \\
+            x_{011}
         \end{bmatrix}
       } \\
       {
         \begin{bmatrix}
-          0 & 1
+            0 & 1
         \end{bmatrix}
         \times
         \begin{bmatrix}
-          x_{100} \\
-          x_{101}
+            x_{100} \\
+            x_{101}
         \end{bmatrix}
       } \\
       {
         \begin{bmatrix}
-          1 & 0
+            1 & 0
         \end{bmatrix}
         \times
         \begin{bmatrix}
-          x_{100} \\
-          x_{101}
+            x_{100} \\
+            x_{101}
         \end{bmatrix}
       } \\
       {
         \begin{bmatrix}
-          0 & 1
+            0 & 1
         \end{bmatrix}
         \times
         \begin{bmatrix}
-          x_{110} \\
-          x_{111}
+            x_{110} \\
+            x_{111}
         \end{bmatrix}
       } \\
       {
         \begin{bmatrix}
-          1 & 0
+            1 & 0
         \end{bmatrix}
         \times
         \begin{bmatrix}
-          x_{110} \\
-          x_{111}
+            x_{110} \\
+            x_{111}
         \end{bmatrix}
       }
     \end{bmatrix}
-    = 
+    =
     \begin{bmatrix}
       x_{001} \\
       x_{000} \\
