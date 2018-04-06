@@ -23,3 +23,12 @@ def run_doxygen(repo):
     except OSError as e:
         sys.stderr.write("doxygen run for {0} failed: {1}".format(repo, e))
         return
+
+    try:
+        retcode = subprocess.call("mkdir -p _static/doxygen; cp -r /tmp/{0}/doc/html/* _static/doxygen/{0}".format(repo), shell=True)
+        if retcode < 0:
+            sys.stderr.write("copy terminated by signal %s" % (-retcode))
+            return
+    except OSError as e:
+        sys.stderr.write("copy run for {0} failed: {1}".format(repo, e))
+        return
