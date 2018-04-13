@@ -68,68 +68,76 @@ State Manipulation Methods
 Quantum Gates
 -------------
 
-.. note:: Most gates offer both a single-bit version taking just the index to the qubit, as well as a register-spanning variant for convienence and performance that performs the gate across a sequence of bits.  Only the latter is documented here.
+.. note:: Most gates offer both a single-bit version taking just the index to the qubit, as well as a register-spanning variant for convienence and performance that performs the gate across a sequence of bits.
+
+Single Register Gates
+~~~~~~~~~~~~~~~~~~~~~
 
 .. doxygenfunction:: AND(bitLenInt, bitLenInt, bitLenInt)
-
-.. doxygenfunction:: CLAND(bitLenInt, bitCapInt, bitLenInt, bitLenInt)
-
+.. doxygenfunction:: CLAND(bitLenInt, bool, bitLenInt)
 .. doxygenfunction:: OR(bitLenInt, bitLenInt, bitLenInt)
-
-.. doxygenfunction:: CLOR(bitLenInt, bitCapInt, bitLenInt, bitLenInt)
-
+.. doxygenfunction:: CLOR(bitLenInt, bool, bitLenInt)
 .. doxygenfunction:: XOR(bitLenInt, bitLenInt, bitLenInt)
+.. doxygenfunction:: CLXOR(bitLenInt, bool, bitLenInt)
 
+.. doxygenfunction:: H(bitLenInt)
+.. doxygenfunction:: M(bitLenInt)
+.. doxygenfunction:: X(bitLenInt)
+
+.. doxygenfunction:: Y(bitLenInt)
+.. doxygenfunction:: Z(bitLenInt)
+.. doxygenfunction:: CY(bitLenInt, bitLenInt)
+.. doxygenfunction:: CZ(bitLenInt, bitLenInt)
+.. doxygenfunction:: RT(double, bitLenInt)
+
+.. doxygenfunction:: RTDyad(int, int, bitLenInt)
+.. doxygenfunction:: RX(double, bitLenInt)
+.. doxygenfunction:: RXDyad(int, int, bitLenInt)
+.. doxygenfunction:: CRX(double, bitLenInt, bitLenInt)
+.. doxygenfunction:: CRXDyad(int, int, bitLenInt, bitLenInt)
+.. doxygenfunction:: RY(double, bitLenInt)
+.. doxygenfunction:: RYDyad(int, int, bitLenInt)
+.. doxygenfunction:: CRY(double, bitLenInt, bitLenInt)
+.. doxygenfunction:: CRYDyad(int, int, bitLenInt, bitLenInt)
+.. doxygenfunction:: RZ(double, bitLenInt)
+.. doxygenfunction:: RZDyad(int, int, bitLenInt)
+.. doxygenfunction:: CRZ(double, bitLenInt, bitLenInt)
+.. doxygenfunction:: CRZDyad(int, int, bitLenInt, bitLenInt)
+
+Register-wide Gates
+~~~~~~~~~~~~~~~~~~~
+
+.. doxygenfunction:: AND(bitLenInt, bitLenInt, bitLenInt, bitLenInt)
+.. doxygenfunction:: CLAND(bitLenInt, bitCapInt, bitLenInt, bitLenInt)
+.. doxygenfunction:: OR(bitLenInt, bitLenInt, bitLenInt, bitLenInt)
+.. doxygenfunction:: CLOR(bitLenInt, bitCapInt, bitLenInt, bitLenInt)
+.. doxygenfunction:: XOR(bitLenInt, bitLenInt, bitLenInt, bitLenInt)
 .. doxygenfunction:: CLXOR(bitLenInt, bitCapInt, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: CCNOT
-
 .. doxygenfunction:: AntiCCNOT
-
 .. doxygenfunction:: CNOT(bitLenInt, bitLenInt, bitLenInt)
-
+.. doxygenfunction:: CNOT(bitLenInt, bitLenInt)
 .. doxygenfunction:: AntiCNOT
-
 .. doxygenfunction:: H(bitLenInt, bitLenInt)
-
 .. doxygenfunction:: M(bitLenInt, bitLenInt)
-
 .. doxygenfunction:: X(bitLenInt, bitLenInt)
-
 .. doxygenfunction:: Y(bitLenInt, bitLenInt)
-
 .. doxygenfunction:: Z(bitLenInt, bitLenInt)
-
 .. doxygenfunction:: CY(bitLenInt, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: CZ(bitLenInt, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: RT(double, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: RTDyad(int, int, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: RX(double, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: RXDyad(int, int, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: CRX(double, bitLenInt, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: CRXDyad(int, int, bitLenInt, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: RY(double, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: RYDyad(int, int, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: CRY(double, bitLenInt, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: CRYDyad(int, int, bitLenInt, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: RZ(double, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: RZDyad(int, int, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: CRZ(double, bitLenInt, bitLenInt, bitLenInt)
-
 .. doxygenfunction:: CRZDyad(int, int, bitLenInt, bitLenInt, bitLenInt)
 
 Internal Utility Methods

@@ -206,3 +206,8 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 todo_include_todos = True
 
 cpp_index_common_prefix = ['Qrack::CoherentUnit::', 'Qrack::Complex16Simd::', 'CoherentUnit::', 'Complex16Simd::', 'CoherentUnit', 'Complex16Simd']
+
+suppress_warnings = ['ref.citation']
+
+def setup(app):
+    app.add_stylesheet("theme_overrides.css")

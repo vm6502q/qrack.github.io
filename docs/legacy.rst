@@ -11,28 +11,22 @@ Like classical bits, a set of qubits has a maximal representation as the permuta
 The state of a two bit permutation can be described as follows: where one in the set of variables ":math:`x_0, x_1, x_2,` and :math:`x_3`" is equal to 1 and the rest are equal to zero, the state of the bit permutation can always be described by:
 
 .. math:: \rvert\psi\rangle = x_0 \rvert00\rangle + x_1 \rvert01\rangle + x_2 \rvert10\rangle + x_3 \rvert11\rangle
-   :label: psi_prob
-
-.. Syntax Highlight fixing comment: `\rvert
+   :label: legacy_psi_prob
 
 One of the leading variables is always 1 and the rest are always 0. That is, the state of the classical bit combination is always exactly one of :math:`\rvert00\rangle, \rvert01\rangle, \rvert10\rangle,` or :math:`\rvert11\rangle,` and is not probabilistic in it's value.
 
-However, quantum bit's can be represented probabilistically, in which the sum of probabilities of states should be 100% or 1. For example, this suggests splitting x_0 and x_1 into 1/2 and 1/2 to represent a potential :math:`\rvert\psi\rangle`, but Schrödinger's equation actually requires us to split into :math:`1/\sqrt{2}` and :math:`1/\sqrt{2}` to get 100% probability, like so,
+However, quantum bit's can be represented probabilistically, in which the sum of probabilities of states should be 100% or 1. For example, this suggests splitting :math:`x_0` and :math:`x_1` into :math:`1/2` and :math:`1/2` to represent a potential :math:`\rvert\psi\rangle`, but Schrödinger's equation actually requires us to split into :math:`1/\sqrt{2}` and :math:`1/\sqrt{2}` to get 100% probability, like so,
 
 .. math:: \rvert\psi\rangle = \frac{1}{\sqrt{2}} \rvert00\rangle + \frac{1}{\sqrt{2}} \rvert10\rangle,
-
-.. Syntax Highlight fixing comment: `\rvert
 
 where the leading coefficients are ultimately squared - more accurately: multiplied by their complex conjugate. This is a valid description of a 2 qubit permutation.
 
 Complex Number States
 ---------------------
 
-The equation :eq:`psi_prob` given above encompasses all possible states of a 2 qubit combination, when :math:`x_n` are constrained so that the total probability of all states adds up to one. However, the domain of the :math:`x_n` variables must also be the complex numbers. This is also a valid state, for example:
+The equation :eq:`legacy_psi_prob` given above encompasses all possible states of a 2 qubit combination, when :math:`x_n` are constrained so that the total probability of all states adds up to one. However, the domain of the :math:`x_n` variables must also be the complex numbers. This is also a valid state, for example:
 
 .. math:: \rvert\psi\rangle = \frac{1+i}{2 \sqrt{2}} \rvert00\rangle + \frac{1-i}{2 \sqrt{2}} \rvert10\rangle
-
-.. Syntax Highlight fixing comment: `\rvert
 
 where "i" is defined as the :math:`\sqrt(-1)`. This imparts "phase" to each permutation state vector component like :math:`\rvert00\rangle` or :math:`\rvert10\rangle` - which are "eigenstates". Phase and probability of permutation state fully (but not uniquely) specify the state of a coherent set of qubits.
 
@@ -43,15 +37,11 @@ For N bits, there are :math:`2^N` permutation basis "eigenstates" that with prob
 
 .. math:: \rvert\psi\rangle = \frac{1}{\sqrt{2}} \rvert00\rangle + \frac{1}{\sqrt{2}} \rvert11\rangle
 
-.. Syntax Highlight fixing comment: `\rvert
-
 has a probability of both bits being 1 or else both bits being 0, but it has no independent probability for the bits being different, when measured. If this state is acted on by an ``X`` or ``NOT`` gate on the left qubit we need only act on the states entangled into the original state.
 
 For example, when acted on by an ``X`` gate on the left bit:
 
 .. math:: \rvert\psi_0\rangle = \frac{1}{\sqrt{2}} \rvert00\rangle + \frac{1}{\sqrt{2}} \rvert11\rangle \Rightarrow \frac{1}{\sqrt{2}} \rvert10\rangle + \frac{1}{\sqrt{2}} \rvert01\rangle
-
-.. Syntax Highlight fixing comment: `\rvert
 
 In the permutation basis, "entanglement" is as simple as the ability to restrain bit combinations in specifying an arbitrary :math:`\rvert\psi\rangle` state.
 
@@ -77,33 +67,33 @@ This covers the entire permutation basis, a full description of all possible qua
 Basic Gate Operations
 ---------------------
 .. math::
-   :label: zgate
+   :label: legacy_zgate
 
    \begin{pmatrix}
    1 & 0\\
    0 & 1\\
    \end{pmatrix}
 
-Equation :eq:`zgate` is a standard ``Z`` gate matrix.
+Equation :eq:`legacy_zgate` is a standard ``Z`` gate matrix.
 
 The single qubit state vector has two components:
 
 .. math::
-   :label: bitvec
+   :label: legacy_bitvec
 
    \begin{pmatrix}
    x_0\\
    x_1\\
    \end{pmatrix}
 
-Equation :eq:`bitvec` represents the permutations of a single qubit.
+Equation :eq:`legacy_bitvec` represents the permutations of a single qubit.
 
-These ":math:`x_0`" and ":math:`x_1`" are the same coefficients as from :eq:`psi_prob`.
+These ":math:`x_0`" and ":math:`x_1`" are the same coefficients as from :eq:`legacy_psi_prob`.
 
 The action of a gate is a matrix multiplication:
 
 .. math::
-   :label: zgatemult
+   :label: legacy_zgatemult
 
    \begin{pmatrix}
    1 & 0\\
@@ -151,8 +141,6 @@ For a bitwise ``NOT`` or ``X`` operation on one register, we can take an initial
 
 .. math:: \rvert\psi\rangle = \frac{1}{\sqrt{2}} \rvert(01010101)\ (11111110)\rangle - \frac{1}{\sqrt{2}} \rvert(10101010)\ (00000000)\rangle
 
-.. Syntax Highlight fixing comment: `\rvert
-
 .. TODO: Clarify: normalization
 
 The registers are "entangled" so that only two possible states can result from measurement; if we measure any single bit - except the right-most, in this example - we collapse into one of these two states, adjusting the normalization so that only one state remains in the full description of the quantum state.
@@ -168,8 +156,6 @@ Say we want to apply a bitwise ``NOT`` or ``X`` operation on the right-hand regi
 (acted on by a bitwise NOT or X on the right-hand 8 bit register becomes)
 
 .. math:: \rvert\psi_1\rangle = \frac{1}{\sqrt{2}} \rvert(01010101)\ (00000001)\rangle - \frac{1}{\sqrt{2}} \rvert(10101010)\ (11111111)\rangle
-
-.. Syntax Highlight fixing comment: `\rvert
 
 :cpp:class:`Qrack::CoherentUnit` Gate Implementations
 -----------------------------------------------------

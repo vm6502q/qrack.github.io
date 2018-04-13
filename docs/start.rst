@@ -10,15 +10,20 @@ Check out each of the major repositories into a project branch:
 
           / $ mkdir qc
           / $ cd qc
-        qc/ $ for i in 'https://github.com/vm6502q/qrack.git'      \
-                       'https://github.com/vm6502q/vm6502q.git'    \
-                       'https://github.com/vm6502q/examples.git'   \
-                       'https://github.com/vm6502q/cc65.git'; do
-                git clone $i
-              done
+        qc/ $ git clone https://github.com/vm6502q/qrack.git
+        qc/ $ git clone https://github.com/vm6502q/vm6502q.git
+        qc/ $ git clone https://github.com/vm6502q/examples.git
+            # Note: the cc65 repository changes live in the 6502q branch
+        qc/ $ git clone https://github.com/vm6502q/cc65.git -b 6502q
 
             # Add a necessary symlink connecting the vm6502q project with qrack
         qc/ $ cd vm6502q && ln -s ../qrack
+
+            # vm6502q expects the qrack buildfiles to exist in qrack/build
+        qc/ $ mkdir qrack/build
+        qc/ $ cd qrack/build && cmake ..
+            # OR if no OpenCL support is enabled
+        qc/ $ cd qrack/build && cmake -DUSE_OPENCL=OFF ..
 
 Compiling
 ~~~~~~~~~
@@ -27,7 +32,7 @@ Compiling
 
     The ``qrack`` project supports two primary implementations: OpenCL-optimized and software-only.  See :doc:`opencl` for details on installing OpenCL on some platforms, or your appropriate OS documentation.
 
-    If you do not have OpenCL or do not wish to use it, supply the ``ENABLE_OPENCL=0`` environment to ``make`` when building the project.
+    If you do not have OpenCL or do not wish to use it, supply the ``USE_OPENCL=OFF`` environment to ``cmake`` when building qrack the first time, and ``ENABLE_OPENCL=0`` to ``make`` when building ``vm6502q``.
 
 Compile in the ``vm6502q`` project.  This will build both the ``vm6502q`` emulator as well as the linked ``qrack`` project:
 
@@ -44,9 +49,7 @@ The qrack project has an extensive set of unittests for the various :cpp:class:`
 
 .. code-block:: bash
 
-     qrack/ $ make test
-            # OR if no OpenCL is available
-     qrack/ $ ENABLE_OPENCL=0 make test
+     qrack/build/ $ make test
 
 This may take a few minutes to complete, depending on the strength of the system executing the tests.
 
