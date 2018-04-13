@@ -4,9 +4,9 @@ Theory
 Foundational Material
 ---------------------
 
-Broadly speaking, a certain amount of prerequisite knowledge is necessary to utilize and understand quantum computational algorithms and processes.  Someday this material may be substantially diminished by intelligently chosen abstractions, but today quantum systems are still heavily dependent on an understanding of the underlying mathematical principles.
+A certain amount of prerequisite knowledge is necessary to utilize and understand quantum computational algorithms and processes.  Someday this material may be substantially diminished by intelligently chosen abstractions, but today quantum systems are still heavily dependent on an understanding of the underlying mathematical principles.
 
-It is well outside the scope of this document to cover that material, however a set of references have been collected here.  These materials provide a sufficient foundation for onboarding a new engineer or scientist.
+It is outside the scope of this document to cover that material. However, a set of references have been collected here.  These materials provide a sufficient foundation for onboarding a new engineer or scientist.
 
 Quantum Computational Basics
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -27,7 +27,7 @@ Grover Search Algorithm
 Quantum Bit Simulation
 ----------------------
 
-Simulating a quantum bit takes advantage of the probabilistic nature of the measurement result of a quantum bit and records strictly the complex number amplitude for each of the possible qubit outcomes in a coherent state.  Thus, a two qubit system which can be expressed through the following equation:
+Quantum bits are simulated by recording the complex number amplitude of a wave function solution to Schrödinger's equation. All this means is, we record one complex number with legnth between 0 and 1 number correspendonding to each possible permutation of bits in the "coherent" set of quantum bits. The sum of the norms of all permutation amplitudes must sum to 1. Thus, a two qubit system can be expressed through the following equation:
 
 .. math::
    :label: 3qb_amp
@@ -35,13 +35,13 @@ Simulating a quantum bit takes advantage of the probabilistic nature of the meas
     \lvert\psi\rangle = x_0 \lvert 000\rangle + x_1 \lvert 001\rangle + x_2 \lvert 010\rangle + x_3 \lvert 011\rangle + \
                         x_4 \lvert 100\rangle + x_5 \lvert 101\rangle + x_6 \lvert 110\rangle + x_7 \lvert 111\rangle
 
-Each of the :math:`x_n` complex numbers represents the amplitudes of the quantum system, on measurement, resulting in a particular bit pattern.  While a real quantum mechanical system would produce probabilistic measurements based on these amplitudes, a simulation like this is deterministic.
+Each of the :math:`x_n` complex numbers represents the amplitudes of the quantum system, multiplied times the "eigenstates." If all bits are measured simultaneously, the norm of an amplitude gives its probability on measurement, resulting in a particular bit pattern based on the amplitudes and a randomly generated number.  While a real quantum mechanical system would produce probabilistic measurements based on these amplitudes, a simulation like this is deterministic, but pseudo-random.
 
 .. note:: **Probability vs Amplitude**
 
-	It's a common misrepresentation to consider the :math:`x_n` `eigenstate <http://farside.ph.utexas.edu/teaching/qmech/Quantum/node40.html>`_ as a *probability* rather than an *amplitude*.  The root of this misrepresentation lies in the measurement operation, which collapses the amplitude in a non-unitary fashion, resulting in a probabilistic result.  But the :math:`x_n` eigenstates are not probabilistic values - rather, they are the amplitude times a complex `phase factor <https://en.wikipedia.org/wiki/Phase_factor>`_.  In this document, we will refer to the eigenstates as amplitudes, and values obtained post-measurement as probabilistic.
+It is a common misconception that the defining characteristic of a quantum computer, compared to a classical computer, is that a quantum computer is probabilistic. Except, an :math:`x_n` `eigenstate <http://farside.ph.utexas.edu/teaching/qmech/Quantum/node40.html>`_ has both *probability* and a *phase.* It is not a bit with just a dimension of probability, but rather a bit with two dimensions, one of probablity and one of phase, an "amplitude."  The root of this misconception lies in the measurement operation, which can have a probabilistic outcome.  But the :math:`x_n` coefficients are not probabilistic values - rather, they are the amplitude of complex number wave function. The value of the wave function for any permutation state is the square root of its probability times a `phase factor <https://en.wikipedia.org/wiki/Phase_factor>`_.
 
-By collecting :math:`x_n` into a complex number array (called :cpp:member:`Qrack::CoherentUnit::stateVec`), the full quantum representation of the system can be recorded using :math:`2^N` *complex* variables per quantum bit:
+By collecting :math:`x_n` into a complex number array (called :cpp:member:`Qrack::CoherentUnit::stateVec`), the full quantum representation of the system can be recorded using :math:`2^N` *complex number* variables for N quantum bits:
 
 .. code-block:: cpp
 
@@ -57,7 +57,7 @@ Given a standard :math:`X` gate matrix,
       1 & 0
     \end{bmatrix}
 
-a question arises: how can this :math:`2\times2` matrix be applied against the :math:`1xN` vector for N arbitrary entangled qubits, where the vector is the :math:`x_n` amplitudes from :eq:`3qb_amp`?
+one might ask, how can this :math:`2\times2` matrix be applied against the :math:`1xN` vector for N arbitrary entangled qubits, where the vector is the :math:`x_n` amplitudes from :eq:`3qb_amp`?
 
 .. math::
 
@@ -76,17 +76,17 @@ a question arises: how can this :math:`2\times2` matrix be applied against the :
       x_{111}
     \end{bmatrix}
 
-The solution here is to apply a `Kronecker product <https://en.wikipedia.org/wiki/Kronecker_product>`_ to the gate matrix.  This expands the matrix out to the appropriate number of dimensions - in this case we would need to perform two Kronecker products for each of the two bits whose values are irrelevant to the result:
+To do so, we apply a `Kronecker product <https://en.wikipedia.org/wiki/Kronecker_product>`_ to the gate matrix.  This expands the matrix out to the appropriate number of dimensions - in this case we would need to perform two Kronecker products for each of the two bits whose values are irrelevant to the result:
 
 .. math::
     :label: x_3bit
 
-    (X \otimes I \otimes I) \times M
+    \left(X \otimes I \otimes I\right) \times M
 
 .. math::
     :label: x_3bit_2
 
-    (\begin{bmatrix}
+    \left(\begin{bmatrix}
       0 & 1 \\\
       1 & 0
     \end{bmatrix}
@@ -99,7 +99,7 @@ The solution here is to apply a `Kronecker product <https://en.wikipedia.org/wik
     \begin{bmatrix}
       1 & 0 \\\
       0 & 1
-    \end{bmatrix}) \times
+    \end{bmatrix}\right) \times
     \begin{bmatrix}
       x_{000} \\
       x_{001} \\
@@ -162,11 +162,11 @@ The solution here is to apply a `Kronecker product <https://en.wikipedia.org/wik
       x_{110}
     \end{bmatrix}
 
-The equation :eq:`x_3bit` inverts the amplitudes of the first bit out of three, but leave the second and third bits alone.  Using the identity matrix :math:`I` preserves the amplitudes of the :math:`x_{0nn}` and :math:`x_{1nn}` positions.  The expanded matrix in :eq:`x_3bit_3` now has the proper dimensionality to be multiplied directly against the amplitude vector.
+The equation :eq:`x_3bit` swaps the amplitudes of 0 and 1 for the first bit out of three, but leave the second and third bits alone.  Using the identity matrix :math:`I` preserves the amplitudes of the :math:`x_{0nn}` and :math:`x_{1nn}` positions.  The expanded matrix in :eq:`x_3bit_3` now has the proper dimensionality to be multiplied directly against the amplitude vector.
 
 .. note:: It's important to remember here that, unlike a classical :math:`NOT` which directly inverts a bit, the :math:`X` gate swaps the *amplitudes* for the states where the qubit is 1 with the amplitudes where the qubit is 0.  So while :math:`x_{000}` and :math:`x_{100}` have particular complex number values, the position in the vector :math:`M[0]` will always correspond to the amplitude :math:`x_0` in :eq:`3qb_amp`.  If the value of :math:`M[0]` is :math:`x_{100}`, then the amplitude of the system, on measurement, resulting in :math:`\lvert000\rangle` is equal to the amplitude that the system, prior to the :math:`X` gate, would have resulted in :math:`\lvert100\rangle`.  See `Quantum Logic Gates <https://en.wikipedia.org/wiki/Quantum_logic_gate#Circuit_composition_and_entangled_states>`_ for more information.
 
-Implementing this simplistically would, as illustrated above in :eq:`x_3bit_3`, require matrices sized at :math:`2^{2x}`, where :math:`x` is the number of qubits the gate operates on.  This rapidly grows prohibitive in memory usage, and is the primary limitation for simulating quantum systems using classical components.  Happily, these types of matrix operations lend themselves particularly well to both memory optimization as well as parallelization of computational cost.
+Implementing this naively would require matrices sized at :math:`2^{2x}` (as illustrated above in :eq:`x_3bit_3`) where :math:`x` is the number of qubits the gate operates on.  This rapidly grows prohibitive in memory usage, and is the primary limitation for simulating quantum systems using classical components.  Fortunately, these types of matrix operations lend themselves particularly well to both memory optimization as well as parallelization of computational cost.
 
 There are two immediate optimizations that can be performed.  The first is an optimization on the matrix size: by performing the math with only a :math:`2\times2` matrix, the amount of memory allocated is substantially reduced. The :cpp:func:`Qrack::CoherentUnit::Apply2x2()` method utilizes this optimization.
 
@@ -356,7 +356,7 @@ It's worth pointing out that the operation detailed in :eq:`x_3bit_opt` is heavi
     // X-gate the bit at index 0
     qReg->X(0);
 
-The second optimization is one of combining sequential gates into a single matrix, allowing for a reduction in both matrix size and computational cost.  See IBM's `article <https://www.ibm.com/blogs/research/2017/10/quantum-computing-barrier/>`_ and related `publication <https://arxiv.org/abs/1710.05867>`_ for details on how to optimize these operations in more detail.  The :cpp:class:`Qrack::CoherentUnit` register-wide operations (e.g. :cpp:func:`Qrack::CoherentUnit::X`) leverage these types of optimizations, with parallelization provided through threading and OpenCL, as supported.
+The second optimization to maintain separation of state vectors between bits where entanglement is not necessary.  See IBM's `article <https://www.ibm.com/blogs/research/2017/10/quantum-computing-barrier/>`_ and related `publication <https://arxiv.org/abs/1710.05867>`_ for details on how to optimize these operations in more detail.  The :cpp:class:`Qrack::CoherentUnit` register-wide operations (e.g. :cpp:func:`Qrack::CoherentUnit::X`) leverage these types of optimizations, with parallelization provided through threading and OpenCL, as supported.
 
 LDA,X Unitary Matrix
 ~~~~~~~~~~~~~~~~~~~~
