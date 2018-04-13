@@ -164,7 +164,7 @@ The solution here is to apply a `Kronecker product <https://en.wikipedia.org/wik
 
 The equation :eq:`x_3bit` inverts the amplitudes of the first bit out of three, but leave the second and third bits alone.  Using the identity matrix :math:`I` preserves the amplitudes of the :math:`x_{0nn}` and :math:`x_{1nn}` positions.  The expanded matrix in :eq:`x_3bit_3` now has the proper dimensionality to be multiplied directly against the amplitude vector.
 
-.. note:: It's important to remember here that, unlike a classical :math:`NOT` which directly inverts a bit, the :math:`X` gate swaps the *amplitudes* for the states where the qubit is 1 with the amplitudes where the qubit is 0.  So while :math:`x_{000}` and :math:`x_{100}` have particular complex number values, the position in the vector :math:`M[0]` will always correspond to the amplitude :math:`x_0` in :eq:`3qb_amp`.  If the value of :math:`M[0]` is :math:`x_{100}`, then the amplitude of the system, on measurement, resulting in :math:`\rvert000\rangle` is equal to the amplitude that the system, prior to the :math:`X` gate, would have resulted in :math:`\rvert100\rangle`.  See `Quantum Logic Gates <https://en.wikipedia.org/wiki/Quantum_logic_gate#Circuit_composition_and_entangled_states>`_ for more information.
+.. note:: It's important to remember here that, unlike a classical :math:`NOT` which directly inverts a bit, the :math:`X` gate swaps the *amplitudes* for the states where the qubit is 1 with the amplitudes where the qubit is 0.  So while :math:`x_{000}` and :math:`x_{100}` have particular complex number values, the position in the vector :math:`M[0]` will always correspond to the amplitude :math:`x_0` in :eq:`3qb_amp`.  If the value of :math:`M[0]` is :math:`x_{100}`, then the amplitude of the system, on measurement, resulting in :math:`\lvert000\rangle` is equal to the amplitude that the system, prior to the :math:`X` gate, would have resulted in :math:`\lvert100\rangle`.  See `Quantum Logic Gates <https://en.wikipedia.org/wiki/Quantum_logic_gate#Circuit_composition_and_entangled_states>`_ for more information.
 
 Implementing this simplistically would, as illustrated above in :eq:`x_3bit_3`, require matrices sized at :math:`2^{2x}`, where :math:`x` is the number of qubits the gate operates on.  This rapidly grows prohibitive in memory usage, and is the primary limitation for simulating quantum systems using classical components.  Happily, these types of matrix operations lend themselves particularly well to both memory optimization as well as parallelization of computational cost.
 
@@ -360,6 +360,8 @@ The second optimization is one of combining sequential gates into a single matri
 
 LDA,X Unitary Matrix
 ~~~~~~~~~~~~~~~~~~~~
+
+Note that the VM6502Q X-addressed LDA, ADC, and SBC operations can load, add, or subtract with a superposed X register. If the permutation states of the classical memory addressed by the X register are treated as quantum degrees of freedom, these operations are unitary. A simplified example of the unitary matrix or operator for 2 qubits and a "lookup table" of two independent bits is given below. The least significant bit is the index (or X register), the second least significant bit is the value (or accumulator), and the third and fourth bits are the 0 and 1 indexed classical bits in the "lookup table," treated as quantum degrees of freedom. The rows and columns of the matrix proceed in bit signifance permutation order from :math:`\lvert0000\rangle` to :math:`\lvert1111\rangle`.
 
 .. math::
 
