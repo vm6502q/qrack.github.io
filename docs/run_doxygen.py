@@ -6,7 +6,7 @@ def run_doxygen(repo):
     """Run the doxygen make command in the designated folder"""
 
     try:
-        rc = subprocess.call("git clone -b dox https://github.com/vm6502q/{0}.git /tmp/{0}".format(repo), shell=True)
+        rc = subprocess.call("git clone -b dox https://github.com/bennbollay/{0}.git /tmp/{0}".format(repo), shell=True)
         if rc < 0:
             sys.stderr.write("failed to clone repo {0}: {1}, {2}".format(repo))
             return
