@@ -85,5 +85,5 @@ Finally, a `6502 toolchain <https://github.com/vm6502q/cc65>`_ - based on `CC65 
     QUnit <_static/doxygen/classQrack_1_1QUnit.html#http://>
     QEngineCPU <_static/doxygen/classQrack_1_1QEngineCPU.html#http://>
     QEngineOCL <_static/doxygen/classQrack_1_1QEngineOCL.html#http://>
-    Complex16Simd <_static/doxygen/classQrack_1_1Complex16Simd.html#http://>
+    Complex16Simd <_static/doxygen/structQrack_1_1Complex16Simd.html#http://>
 
