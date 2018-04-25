@@ -13,6 +13,7 @@ def run_doxygen(repo):
     except OSError as e:
         sys.stderr.write("git clone {0} failed: {1}".format(repo, e))
         return
+    sys.stderr.write("Doxygen: git clone for {0} succeeded\n".format(repo))
 
 
     try:
@@ -23,3 +24,15 @@ def run_doxygen(repo):
     except OSError as e:
         sys.stderr.write("doxygen run for {0} failed: {1}".format(repo, e))
         return
+    sys.stderr.write("Doxygen: doxygen {0} succeeded\n".format(repo))
+
+    try:
+        retcode = subprocess.call("cp -r /tmp/{0}/doc/html _static/doxygen".format(repo), shell=True)
+        if retcode < 0:
+            sys.stderr.write("copy terminated by signal %s" % (-retcode))
+            return
+    except OSError as e:
+        sys.stderr.write("doxygen run for {0} failed: {1}".format(repo, e))
+        return
+    sys.stderr.write("Doxygen: copy for {0} succeeded\n".format(repo))
+

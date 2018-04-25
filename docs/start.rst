@@ -45,7 +45,7 @@ Compile in the ``vm6502q`` project.  This will build both the ``vm6502q`` emulat
 Testing
 ~~~~~~~
 
-The qrack project has an extensive set of unittests for the various :cpp:class:`Qrack::CoherentUnit` gates and simulator methods.  This can be executed through running the test suite in the ``qrack`` project:
+The qrack project has an extensive set of unittests for the various :cpp:class:`Qrack::QInterface` gates and simulator methods.  This can be executed through running the test suite in the ``qrack`` project:
 
 .. code-block:: bash
 
@@ -61,7 +61,7 @@ This may take a few minutes to complete, depending on the strength of the system
 Embedding Qrack
 ~~~~~~~~~~~~~~~
 
-The ``qrack`` project produces a ``libqrack.a`` archive, suitable for being linked into a larger binary.  See the :cpp:class:`Qrack::CoherentUnit` documentation for API references, as well as the examples present in `the unit tests <https://github.com/vm6502q/qrack/blob/master/tests.cpp>`_.
+The ``qrack`` project produces a ``libqrack.a`` archive, suitable for being linked into a larger binary.  See the :cpp:class:`Qrack::QInterface` documentation for API references, as well as the examples present in `the unit tests <https://github.com/vm6502q/qrack/blob/master/tests.cpp>`_.
 
 Performance
 ~~~~~~~~~~~
