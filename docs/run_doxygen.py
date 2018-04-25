@@ -27,7 +27,7 @@ def run_doxygen(repo):
     sys.stderr.write("Doxygen: doxygen {0} succeeded\n".format(repo))
 
     try:
-        retcode = subprocess.call("mkdir -p _static/doxygen; cp -r /tmp/{0}/doc/html/* _static/doxygen/{0}".format(repo), shell=True)
+        retcode = subprocess.call("mkdir -p _build/html/_static/doxygen; cp -r /tmp/{0}/doc/html/* _build/html/_static/doxygen/{0}".format(repo), shell=True)
         if retcode < 0:
             sys.stderr.write("copy terminated by signal %s" % (-retcode))
             return
