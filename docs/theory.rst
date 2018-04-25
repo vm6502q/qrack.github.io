@@ -355,7 +355,7 @@ It's worth pointing out that the operation detailed in :eq:`x_3bit_opt` is heavi
     // X-gate the bit at index 0
     qReg->X(0);
 
-The second optimization is to maintain separation of state vectors between bits where entanglement is not necessary.  See IBM's `article <https://www.ibm.com/blogs/research/2017/10/quantum-computing-barrier/>`_ and related `publication <https://arxiv.org/abs/1710.05867>`_ for details on how to optimize these operations in more detail.  The :cpp:class:`Qrack::SeparatedUnit` and :cpp:class:`Qrack::QInterface` register-wide operations (e.g. :cpp:func:`Qrack::QInterface::X`) leverage these types of optimizations, with parallelization provided through threading and OpenCL, as supported.
+The second optimization is to maintain separability of state vectors between bits where entanglement is not necessary.  See IBM's `article <https://www.ibm.com/blogs/research/2017/10/quantum-computing-barrier/>`_ and related `publication <https://arxiv.org/abs/1710.05867>`_ for details on how to optimize these operations in more detail.  The :cpp:class:`Qrack::QUnit` and :cpp:class:`Qrack::QInterface` register-wide operations (e.g. :cpp:func:`Qrack::QInterface::X`) leverage these types of optimizations, with parallelization provided through threading and OpenCL, as supported.
 
 LDA,X Unitary Matrix
 ~~~~~~~~~~~~~~~~~~~~
