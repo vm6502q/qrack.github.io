@@ -30,10 +30,10 @@ The equation :eq:`legacy_psi_prob` given above encompasses all possible states o
 
 where "i" is defined as the :math:`\sqrt(-1)`. This imparts "phase" to each permutation state vector component like :math:`\rvert00\rangle` or :math:`\rvert10\rangle` - which are "eigenstates". Phase and probability of permutation state fully (but not uniquely) specify the state of a coherent set of qubits.
 
-:cpp:class:`Qrack::CoherentUnit` Qubit Simulation
+:cpp:class:`Qrack::QInterface` Qubit Simulation
 -------------------------------------------------
 
-For N bits, there are :math:`2^N` permutation basis "eigenstates" that with probability normalization and phase fully describe every possible quantum state of the N qubits. A :cpp:class:`Qrack::CoherentUnit` tracks the :math:`2^N` dimensional state vector of eigenstate components, each permutation carrying probability and phase. It optimizes certain register-like methods by operating in parallel over the "entanglements" of these permutation basis states. For example, the state
+For N bits, there are :math:`2^N` permutation basis "eigenstates" that with probability normalization and phase fully describe every possible quantum state of the N qubits. A :cpp:class:`Qrack::QInterface` tracks the :math:`2^N` dimensional state vector of eigenstate components, each permutation carrying probability and phase. It optimizes certain register-like methods by operating in parallel over the "entanglements" of these permutation basis states. For example, the state
 
 .. math:: \rvert\psi\rangle = \frac{1}{\sqrt{2}} \rvert00\rangle + \frac{1}{\sqrt{2}} \rvert11\rangle
 
@@ -62,7 +62,7 @@ Similarly, these states also become paired:
 
 And so on for all states in which the seven uninvolved bits are kept the same, but 0 and 1 states are paired for the bit acted on by the gate.
 
-This covers the entire permutation basis, a full description of all possible quantum states of the :cpp:class:`Qrack::CoherentUnit`, with pairs of two state vector components acted on by a :math:`2\times2` matrix. For example, for the ``Z`` gate, acting it on a single bit is equivalent to multiplying a single bit state vector by this matrix:
+This covers the entire permutation basis, a full description of all possible quantum states of the :cpp:class:`Qrack::QInterface`, with pairs of two state vector components acted on by a :math:`2\times2` matrix. For example, for the ``Z`` gate, acting it on a single bit is equivalent to multiplying a single bit state vector by this matrix:
 
 Basic Gate Operations
 ---------------------
@@ -133,7 +133,7 @@ and we can carry out the gate in terms of only :math:`2\times2` complex number m
 
 (Further, Qrack already employs POSIX thread type parallelism, SIMD parallelism for complex number operations, and kernel-type GPU parallelism.)
 
-For register-like operations, we can optimize beyond this level for single bit gates. If a virtual quantum chip has multiple registers that can be entangled, by requirements of the minimum full physical description of a quantum mechanical state, the registers must usually be all contained in a single :cpp:class:`Qrack::CoherentUnit`. So, for 2 8-bit registers, we might have one 16-bit :cpp:class:`Qrack::CoherentUnit`.
+For register-like operations, we can optimize beyond this level for single bit gates. If a virtual quantum chip has multiple registers that can be entangled, by requirements of the minimum full physical description of a quantum mechanical state, the registers must usually be all contained in a single :cpp:class:`Qrack::QInterface`. So, for 2 8-bit registers, we might have one 16-bit :cpp:class:`Qrack::QInterface`.
 
 .. TODO: Clarify: 'sieve out'.
 
@@ -157,14 +157,14 @@ Say we want to apply a bitwise ``NOT`` or ``X`` operation on the right-hand regi
 
 .. math:: \rvert\psi_1\rangle = \frac{1}{\sqrt{2}} \rvert(01010101)\ (00000001)\rangle - \frac{1}{\sqrt{2}} \rvert(10101010)\ (11111111)\rangle
 
-:cpp:class:`Qrack::CoherentUnit` Gate Implementations
+:cpp:class:`Qrack::QInterface` Gate Implementations
 -----------------------------------------------------
 
 This is again "embarrassingly parallel." Some bits are completely uninvolved and these bits are passed unchanged in each state from input to output. Bits acted on by the register operation have a one-to-one mapping between input and states. This can all be handled via transformation via bit masks on the input state permutation index.
 
 .. TODO: I think you're saying here that the various x_i change but not the nature of the overall equation.  While true, this doesn't lead naturally to how the implementation actually handles those various x_i values.
 
-And, in fact, bits are not rearranged in the state vector at all; it is the ":math:`x_n`" complex number coefficients which are rearranged according to this bitmask transformation and mapping of the input state to the output state. (The coefficient ":math:`x_i`" of state :math:`\rvert(01010101)\ (11111110)\rangle` is switched for the coefficient ":math:`x_j`" of state :math:`\rvert(01010101)\ (00000001)\rangle`, and only the coefficients are rearranged, with a mapping that's determined via bitmask transformations.) This is almost the entire principle behind the algorithms for optimized register-like methods in Qrack. Also, as a point of algorithmic optimization, if N bits are known to have a fixed value like 0, we can often also completely skip permutations where their value would be 1, dividing the number of permutation states we need to iterate over in total by a factor of :math:`2^N`. This optimization is again handled in terms of bitmasks and bitshifts. See also the register-wise :cpp:func:`Qrack::CoherentUnit::X()` gate implementation for inline documentation on this general algorithm.
+And, in fact, bits are not rearranged in the state vector at all; it is the ":math:`x_n`" complex number coefficients which are rearranged according to this bitmask transformation and mapping of the input state to the output state. (The coefficient ":math:`x_i`" of state :math:`\rvert(01010101)\ (11111110)\rangle` is switched for the coefficient ":math:`x_j`" of state :math:`\rvert(01010101)\ (00000001)\rangle`, and only the coefficients are rearranged, with a mapping that's determined via bitmask transformations.) This is almost the entire principle behind the algorithms for optimized register-like methods in Qrack. Also, as a point of algorithmic optimization, if N bits are known to have a fixed value like 0, we can often also completely skip permutations where their value would be 1, dividing the number of permutation states we need to iterate over in total by a factor of :math:`2^N`. This optimization is again handled in terms of bitmasks and bitshifts. See also the register-wise :cpp:func:`Qrack::QInterface::X()` gate implementation for inline documentation on this general algorithm.
 
 Quantum gates are represented by "unitary" matrices. Unitary matrices preserve the norm (length) of state vectors. Quantum physically observable quantities are associated with "Hermitian" unitary matrices, which are equal to their own conjugate transpose. Not all gates are Hermitian or associated with quantum observables, like general rotation operators. (Three dimensions of spin can be physically measured; the act of rotating spin along these axes is not associated with independent measurable quantities.)
 
@@ -182,4 +182,4 @@ Additionally, as Qrack targets classical emulation of quantum hardware, certain 
 API Documentation
 ===========================
 
-The API documentation is contained in :doc:`api/coherent_unit`.
+The API documentation is contained in :doc:`api/qinterface`.

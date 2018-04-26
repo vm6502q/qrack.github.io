@@ -40,7 +40,7 @@ Each of the :math:`x_n` are complex numbers. These are the amplitudes of the qua
 .. note:: **Probability vs Amplitude**
 	It is a common misconception that the defining characteristic of a quantum computer, compared to a classical computer, is that a quantum computer is probabilistic. Except, an :math:`x_n` `eigenstate <http://farside.ph.utexas.edu/teaching/qmech/Quantum/node40.html>`_ has both *probability* and a *phase.* It is not a bit with just a dimension of probability, but rather a bit with two dimensions, one of probablity and one of phase, an "amplitude."  The root of this misconception lies in the measurement operation, which can have a probabilistic outcome.  But the :math:`x_n` coefficients are not probabilistic values - rather, they are the amplitude of complex number wave function. If we both represent and measure the state as a permutation of 0 and 1 bits, the value of the wave function for any state is the square root of its probability times a `phase factor <https://en.wikipedia.org/wiki/Phase_factor>`_.
 
-By collecting :math:`x_n` into a complex number array (called :cpp:member:`Qrack::CoherentUnit::stateVec`), the full quantum representation of the system can be recorded using :math:`2^N` *complex number* variables for N quantum bits:
+By collecting :math:`x_n` into a complex number array (called :cpp:member:`Qrack::QInterface::stateVec`), the full quantum representation of the system can be recorded using :math:`2^N` *complex number* variables for N quantum bits:
 
 .. code-block:: cpp
 
@@ -167,7 +167,7 @@ The operation in :eq:`x_3bit` swaps the amplitudes of 0 and 1 for the first bit 
 
 Implementing this naively would require matrices sized at :math:`2^{2N}` complex numbers for :math:`N` bits (as illustrated above in :eq:`x_3bit_3`).  This rapidly grows prohibitive in memory usage, and this is the primary limitation for simulating quantum systems using classical components.  Fortunately, these types of matrix operations are easily optimized for both memory usage and parallelization.
 
-There are two immediate optimizations that can be performed.  The first is an optimization on the matrix size: by performing the math with only a :math:`2\times2` matrix, the amount of memory allocated is substantially reduced. The :cpp:func:`Qrack::CoherentUnit::Apply2x2()` method utilizes this optimization.
+There are two immediate optimizations that can be performed.  The first is an optimization on the matrix size: by performing the math with only a :math:`2\times2` matrix, the amount of memory allocated is substantially reduced. The :cpp:func:`Qrack::QInterface::Apply2x2()` method utilizes this optimization.
 
 In shorthand for clarity, an optimized :math:`X` gate is calculated using the following linear algebra:
 
@@ -350,12 +350,12 @@ It's worth pointing out that the operation detailed in :eq:`x_3bit_opt` is heavi
 .. code-block:: cpp
 
     // Create a three qubit register.
-    Qrack::CoherentUnit qReg(3);
+    Qrack::QInterface qReg(3);
 
     // X-gate the bit at index 0
     qReg->X(0);
 
-The second optimization is to maintain separability of state vectors between bits where entanglement is not necessary.  See IBM's `article <https://www.ibm.com/blogs/research/2017/10/quantum-computing-barrier/>`_ and related `publication <https://arxiv.org/abs/1710.05867>`_ for details on how to optimize these operations in more detail.  The :cpp:class:`Qrack::SeparatedUnit` and :cpp:class:`Qrack::CoherentUnit` register-wide operations (e.g. :cpp:func:`Qrack::CoherentUnit::X`) leverage these types of optimizations, with parallelization provided through threading and OpenCL, as supported.
+The second optimization is to maintain separability of state vectors between bits where entanglement is not necessary.  See IBM's `article <https://www.ibm.com/blogs/research/2017/10/quantum-computing-barrier/>`_ and related `publication <https://arxiv.org/abs/1710.05867>`_ for details on how to optimize these operations in more detail.  The :cpp:class:`Qrack::QUnit` and :cpp:class:`Qrack::QInterface` register-wide operations (e.g. :cpp:func:`Qrack::QInterface::X`) leverage these types of optimizations, with parallelization provided through threading and OpenCL, as supported.
 
 LDA,X Unitary Matrix
 ~~~~~~~~~~~~~~~~~~~~

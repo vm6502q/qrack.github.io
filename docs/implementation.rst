@@ -1,12 +1,12 @@
 Implementation
 ==============
 
-CoherentUnit
+QInterface
 --------------------------------
 
-A `Qrack::CoherentUnit` stores a set of permutation basis complex number coefficients and operates on them with bit gates and register-like methods.
+A `Qrack::QInterface` stores a set of permutation basis complex number coefficients and operates on them with bit gates and register-like methods.
 
-The state vector indicates the probability and phase of all possible pure bit permutations, numbered from :math:`0` to :math:`2^N-1`, by simple binary counting. All operations except measurement should be "unitary," except measurement. They should be representable as a unitary matrix acting on the state vector. Measurement, and methods that involve measurement, should be the only operations that break unitarity. As a rule-of-thumb, this means an operation that doesn't rely on measurement should be "reversible." That is, if a unitary operation is applied to the state, their must be a unitary operation to map back from the output to the exact input. In practice, this means that most gate and register operations entail simply direct exchange of state vector coefficients in a one-to-one manner. (Sometimes, operations involve both a one-to-one exchange and a measurement, like the `CoherentUnit::SetBit` method, or the logical comparison methods.)
+The state vector indicates the probability and phase of all possible pure bit permutations, numbered from :math:`0` to :math:`2^N-1`, by simple binary counting. All operations except measurement should be "unitary," except measurement. They should be representable as a unitary matrix acting on the state vector. Measurement, and methods that involve measurement, should be the only operations that break unitarity. As a rule-of-thumb, this means an operation that doesn't rely on measurement should be "reversible." That is, if a unitary operation is applied to the state, their must be a unitary operation to map back from the output to the exact input. In practice, this means that most gate and register operations entail simply direct exchange of state vector coefficients in a one-to-one manner. (Sometimes, operations involve both a one-to-one exchange and a measurement, like the `QInterface::SetBit` method, or the logical comparison methods.)
 
 A single bit gate essentially acts as a :math:`2\times2` matrix between the :math:`0` and :math:`1` states of a single bits. This can be acted independently on all pairs of permutation basis state vector components where all bits are held fixed while :math:`0` and :math:`1` states are paired for the bit being acted on. This is "embarassingly parallel."
 
