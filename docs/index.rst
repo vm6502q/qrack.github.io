@@ -21,33 +21,6 @@ Build Status
 .. |examples_build_status| image:: https://api.travis-ci.org/vm6502q/examples.svg?branch=master
     :target: https://travis-ci.org/vm6502q/examples/builds
 
-.. TODO: General commentary:
-         
-         Broadly speaking, there's a lot of information here.  It needs to be
-         pulled out into three sections:
-             1. Quantum Computation Basics
-                ... containing all of the gate operation and most of the math,
-                    as well as references to external literature
-                theory bits.
-             2. Simulating a Quantum Bit
-                ... containing a dissection of how a quantum bit is simulated
-                    in classical hardware, including code snippets, examples,
-                    and references to external literature.
-             3. Qrack Implementation Details
-                ... containing the details on how a CoherentBit is implemented,
-                    including optimizations, parallalization tradeoffs, and
-                    mathematical accuracy issues.
-         
-         The first section has the most material present, but the second and
-         third sections are very sparse.  I would not, after reading this, be
-         able to implement a QInterface, or even understand how QInterface
-         simulates a qubit.
-         
-         It's worth noting that it's not necessary for you to write all of this
-         text yourself - referencing or directing to valuable external
-         literature (but a minimum of published papers) is a very viable way of
-         sharing the weight.
-
 Introduction
 ------------
 
