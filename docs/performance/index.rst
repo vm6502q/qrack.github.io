@@ -30,7 +30,7 @@ Despite the availability of a selection of implementations, very little has
 been established when comparing the performance between different simulators.
 Broadly, the substantial bottlenecks around memory and IO utilization have
 largely preempted analysis into CPU efficiencies and algorithmic
-optimizations.  There are some exceptions, such as IBM's _`arXiv:1710.05867`.
+optimizations.  There are some exceptions, such as IBM's `Breaking the 49-Qubit Barrier in the Simulation of Quantum Circuits`_ paper.
 
 Qrack provides high performance in the 20-30 qubit range, as well as an
 open-source implementation in C++ suitable for utilization in a wide variety
@@ -75,6 +75,8 @@ Summary
 In addition to the base and intercept, the table also notes the "First Qubit" that passed the noise threshold for the high qubit end of the graph, on the basis of its R^2 statistic being just greater than or equal to 0.99. The R^2 and model p-value are also reported. Assuming a noise threshold, note that these equations are expected to be biased in the direction of underestimating the exponential "Base" of the relationship. "Intercept" is then an estimate of how many qubits it would take for the method to 1 millisecond on average.
 
 QEngineCPU and QEngineOCL are largely reprentative of the worst case behavior for the optimized QUnit. For bitwise parallel gates, QUnit methods are fast enough to be largely swamped by noise for the test cases of 3 to 24 qubits. We present QEngineCPU and QEngineOCL in greater detail than QUnit in order to show the limits of both kinds of registers, and because QUnit's deviation from worst case will depend greatly on use case. Note that QUnit could additionally incur significant overhead in the act of entangling representations of subunits, whereas our test suite does not expect to capture this source of overhead, but this overhead does not persist once a QUnit reaches maximal entanglement of subsystems.
+
+Grover tests also derive from information in `Quantum search of a real unstructured database`_.
 
 Software
 ========
@@ -159,12 +161,15 @@ Further Work
 Conclusion
 **********
 
+`arXiv:1710.05867`_
+
 Citations
 *********
 
 .. target-notes::
 
 .. _`Q#`: http://TBD.com
-.. _`QHipster`: http://TBD.com
+.. _`QHipster`: https://TBD.com
 .. _`Quantiki`: https://www.quantiki.org/wiki/list-qc-simulators
-.. _`arXiv:1710.05867`: Breaking the 49-Qubit Barrier in the Simulation of Quantum Circuits - https://arxiv.org/abs/1710.05867
+.. _`Breaking the 49-Qubit Barrier in the Simulation of Quantum Circuits`: https://arxiv.org/abs/1710.05867
+.. _`Quantum search of a real unstructured database`: https://arxiv.org/abs/1502.04943

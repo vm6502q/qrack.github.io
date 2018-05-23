@@ -62,8 +62,6 @@ State Manipulation Methods
 
 .. doxygenfunction:: Qrack::QInterface::ProbAll
 
-.. doxygenfunction:: Qrack::QInterface::ProbArray
-
 .. doxygenfunction:: Qrack::QInterface::Swap(bitLenInt, bitLenInt)
 
 .. doxygenfunction:: Qrack::QInterface::Swap(bitLenInt, bitLenInt, bitLenInt)
@@ -149,6 +147,6 @@ Algorithmic Implementations
 ---------------------------
 
 .. doxygenfunction:: Qrack::QInterface::QFT
-.. doxygenfunction:: Qrack::QInterface::SuperposeReg8
-.. doxygenfunction:: Qrack::QInterface::AdcSuperposeReg8
-.. doxygenfunction:: Qrack::QInterface::SbcSuperposeReg8
+.. doxygenfunction:: Qrack::QInterface::IndexedLDA
+.. doxygenfunction:: Qrack::QInterface::IndexedADC
+.. doxygenfunction:: Qrack::QInterface::IndexedSBC
