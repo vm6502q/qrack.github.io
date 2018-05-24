@@ -59,15 +59,15 @@ Disclaimers
   results, bugs and mistakes do occur.  If flaws in process are identified,
   please let us know!
 
+Method
+******
+
+100 timed trials of each method were run for each qubit count between 3 and 24 qubits. The average and quartile boundary values of each set of 100 were recorded and graphed. Grover's search to invert a black box subroutine, or "oracle," was similarly implemented for trials between 3 and 17 qubits. Grover's algorithm was iterated an optimal number of times, vs. qubit count, to maximize probability on a half cycle of the algorithm's period, being :math:`floor(π/{4*asin[sqrt(2^N)]})` iterations.
+
 Results
 *******
 
-Summary
-=======
-
-100 timed trials of each method were run for each qubit count between 3 and 24 qubits. The average and quartile boundary values of each set of 100 were recorded and graphed. We observed extremely close correspondence with theoretical complexity and RAM usage considerations for the behavior of all engine types.
-
-QEngineCPU and QEngineOCL require exponential time for a single time over N qubits. QUnit types with explicitly separated subsystems as per https://arxiv.org/abs/1710.05867 show constant time requirements for the same single gate.
+We observed extremely close correspondence with theoretical complexity and RAM usage considerations for the behavior of all engine types. QEngineCPU and QEngineOCL require exponential time for a single time over N qubits. QUnit types with explicitly separated subsystems as per https://arxiv.org/abs/1710.05867 show constant time requirements for the same single gate.
 
 .. image:: x_single.png
 
@@ -90,10 +90,10 @@ In addition to the base and intercept, the table also notes the "First Qubit" th
 
 QEngineCPU and QEngineOCL are largely reprentative of the worst case behavior for the optimized QUnit. For bitwise parallel gates, QUnit methods are fast enough to be largely swamped by noise for the test cases of 3 to 24 qubits. We present QEngineCPU and QEngineOCL in greater detail than QUnit in order to show the limits of both kinds of registers, and because QUnit's deviation from worst case will depend greatly on use case. Note that QUnit could additionally incur significant overhead in the act of entangling representations of subunits, whereas our test suite does not expect to capture this source of overhead, but this overhead does not persist once a QUnit reaches maximal entanglement of subsystems.
 
-Grover tests also derive from information in `Quantum search of a real unstructured database`_.
-
 Software
 ========
+
+These are a representative sample of regression equations for QEngineCPU:
 
 .. csv-table:: Regressed CPU Speed Equations
   :header: "Method","First Qubit","Base","Intercept","R^2","p-value"
@@ -129,6 +129,8 @@ Software
 OpenCL
 ======
 
+These are a representative sample of regression equations for QEngineOCL:
+
 .. csv-table:: Regressed OpenCL Speed Equations
   :header: "Method","First Qubit","Base","Intercept","R^2","p-value"
   :widths: auto
@@ -160,17 +162,10 @@ OpenCL
   "CLAND",11,0.662,-11.15,0.991,1.14E-13
   "QFT",10,0.704,-9.18,0.991,7.8E-15
 
-QUnit
-=====
-
-Systemic Analysis
-*****************
-
-Methodology
-***********
-
 Further Work
 ************
+
+We suggest that a good next primary target for optimizing Qrack is to allow cluster distribution of all the various engine types. Also, CPU "software" implementation parallelism relies on certain potentially expensive standard library functionality, like lambda expressions, and might still be micro-optimized. We will also develop and maintain systematic comparisons to published benchmarks of quantum computer simulation standard libraries, as they arise.
 
 Conclusion
 **********
