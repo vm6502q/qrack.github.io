@@ -65,7 +65,21 @@ Results
 Summary
 =======
 
-100 timed trials of each method were run for each qubit count between 3 and 24 qubits. The average and quartile boundary values of each set of 100 were recorded and graphed. We observed extremely close correspondence with theoretical complexity and RAM usage considerations for the behavior of QEngineCPU and QEngineGPU. Taking an observed threshold of 10 to 15 qubits for API method overhead to become much larger than noise levels, we regressed the high qubit end of each graph for an exponential fit for time against qubits. These regression equations are presented in tables of representative samplings of the API. The results follow this equation:
+100 timed trials of each method were run for each qubit count between 3 and 24 qubits. The average and quartile boundary values of each set of 100 were recorded and graphed. We observed extremely close correspondence with theoretical complexity and RAM usage considerations for the behavior of all engine types.
+
+QEngineCPU and QEngineOCL require exponential time for a single time over N qubits. QUnit types with explicitly separated subsystems as per https://arxiv.org/abs/1710.05867 show constant time requirements for the same single gate.
+
+.. image:: x_single.png
+
+.. image:: cnot_single.png
+
+QEngineCPU and QEngineOCL can perform many identical gates in parallel across entangled subsystems for about the same cost as a single gate. To test this, we can apply parallel gates at once across the full width of a coherent array of qubits. (CNOT is a two bit gate, so (N-1)/2 gates are applied to odd numbers of qubits.) Notice in these next graphs how QEngineCPU and QEngineOCL have approximately the same scaling cost as the single gate graphs above, while QUnit types show a linear trend (appearing logarithmic on an exponential axis scale):
+
+.. image:: x_all.png
+
+.. image:: cnot_all.png
+
+Taking an observed threshold of 10 to 15 qubits for API method overhead to become much larger than noise levels, we regressed the high qubit end of each graph for an exponential fit for time against qubits. These regression equations are presented in tables of representative samplings of the API. The results follow this equation:
 
 .. math::
    :label: regression_eq
