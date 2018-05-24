@@ -7,8 +7,8 @@ Abstract
 
 The Qrack quantum simulator is an open-source C++ high performance, general
 purpose simulation supporting arbitrary numbers of entangled qubits.  While
-there are a variety of other quantum simulators such as `Q#`_, `QHipster`_,
-and others listed on `Quantiki`_, Qrack represents a unique offering suitable
+there are a variety of other quantum simulators such as [QSharp]_, [QHiPSTER]_,
+and others listed on [Quantiki]_, Qrack represents a unique offering suitable
 for applications across the field.
 
 A selection of performance tests are identified for creating comparisons
@@ -74,23 +74,23 @@ Results
 
 We observed extremely close correspondence with theoretical complexity and RAM usage considerations for the behavior of all engine types. QEngineCPU and QEngineOCL require exponential time for a single gate on a coherent unit of N qubits. QUnit types with explicitly separated subsystems as per [Pednault2017]_ show constant time requirements for the same single gate.
 
-.. image:: x_single.png
+.. image:: performance\x_single.png
 
-.. image:: cnot_single.png
+.. image:: performance\cnot_single.png
 
 QEngineCPU and QEngineOCL can perform many identical gates in parallel across entangled subsystems for about the same cost as a single gate. To test this, we can apply parallel gates at once across the full width of a coherent array of qubits. (CNOT is a two bit gate, so :math:`(N-1)/2` gates are applied to odd numbers of qubits.) Notice in these next graphs how QEngineCPU and QEngineOCL have approximately the same scaling cost as the single gate graphs above, while QUnit types show a linear trend (appearing logarithmic on an exponential axis scale):
 
-.. image:: x_all.png
+.. image:: performance\x_all.png
 
-.. image:: cnot_all.png
+.. image:: performance\cnot_all.png
 
 Heap sampling showed high confidence adherence to theoretical expecations. Complex numbers are represented as 2 double (64-bit) accuracy floating point types, for real and imaginary components. There is one complex number per permutation in a separable subsystem of qubits. QUnit explicitly separates subsystems, while QEngine maintains complex amplitudes for all :math:`2^N` permutations of :math:`N` qubits. QEngines duplicate their state vectors once for speed and simplicity where it eases implementation.
 
-.. image:: qrack_ram.png
+.. image:: performance\qrack_ram.png
 
 Grover's algorithm is a relatively ideal test case, in that it allows a minimum of abstraction in implementation while representing an ostensibly practical and common task for truly quantum computational hardware. For 1 expected correct function inversion result, there is a well-defined highest likelihood search iteration count on half a period of the algorithm for a given number of oracle input permutations to search. This graphs shows average time against qubit count for an optimal half period search:
 
-.. image:: grovers.png
+.. image:: performance\grovers.png
 
 [Broda2016]_ discusses how Grover's might be adapted in practicality to actually "search an unstructured database," or search an unstructured lookup table, and Qrack is also capable of applying Grover's search to a lookup table with its IndexedLDA, IndexedADC, and IndexedSBC methods. Benchmarks are not given for this arguably more practical application of the algorithm, because few other quantum computer simulator libraries implement it, yet.
 
@@ -205,6 +205,6 @@ Citations
 
 .. [Broda2016] `Broda, Bogusław. "Quantum search of a real unstructured database." The European Physical Journal Plus 131.2 (2016): 38. <https://arxiv.org/abs/1502.04943>`_
 .. [Pednault2017] `Pednault, Edwin, et al. "Breaking the 49-qubit barrier in the simulation of quantum circuits." arXiv preprint arXiv:1710.05867 (2017). <https://arxiv.org/abs/1710.05867>`_
-.. [Q#] `Q# <https://www.microsoft.com/en-us/quantum/development-kit>`_
+.. [QSharp] `Q# <https://www.microsoft.com/en-us/quantum/development-kit>`_
 .. [QHiPSTER] `QHipster <https://github.com/intel/Intel-QS>`_
 .. [Quantiki] `Quantiki: List of QC simulators <https://www.quantiki.org/wiki/list-qc-simulators>`_
