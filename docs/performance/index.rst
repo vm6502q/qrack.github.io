@@ -105,7 +105,7 @@ QEngineCPU and QEngineOCL are largely reprentative of the worst case behavior fo
 Software
 ========
 
-These are a representative sample of regression equations for QEngineCPU:
+These are a representative sample of regression equations for QEngineCPU. Testing was carried out on parallel gates across the full width of a coherent unit of quantum memory, up to integer flooring on 2 and 3 qubit gates.
 
 .. csv-table:: Regressed CPU Speed Equations
   :header: "Method","First Qubit","Base","Intercept","R^2","p-value"
@@ -141,7 +141,7 @@ These are a representative sample of regression equations for QEngineCPU:
 OpenCL
 ======
 
-These are a representative sample of regression equations for QEngineOCL:
+These are a representative sample of regression equations for QEngineOCL. Testing was carried out on parallel gates across the full width of a coherent unit of quantum memory, up to integer flooring on 2 and 3 qubit gates.
 
 .. csv-table:: Regressed OpenCL Speed Equations
   :header: "Method","First Qubit","Base","Intercept","R^2","p-value"
@@ -173,6 +173,13 @@ These are a representative sample of regression equations for QEngineOCL:
   "RT",11,0.685,-11.47,0.995,3.71E-15
   "CLAND",11,0.662,-11.15,0.991,1.14E-13
   "QFT",10,0.704,-9.18,0.991,7.8E-15
+
+Discussion
+**********
+
+Up to a consistent deviation at low qubit counts, speed and RAM usage is well predicted by theoretical complexity considerations of the gates, up to a factor of 2 on heap usage for duplication of the state vector.
+
+We might speculate that, at high qubit counts, the calculations operate almost entirely on heap, while system call and cache hit efficiency consistently alter the trend up until around roughly 12 qubits, on the test machine, causing the apparent inflection points observed in the graphs given above. For "software" simulation, this would be roughly consistent with the advertised 8MB cache of the i7-4910MQ. If the reduction in the slope of the trend to this point is primarily due to cache hit, about 8 fully entangled qubits would be ideal for an 8MB cache.
 
 Further Work
 ************
