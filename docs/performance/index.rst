@@ -87,14 +87,18 @@ Heap sampling showed high confidence adherence to theoretical expecations. Compl
 
 .. image:: qrack_ram.png
 
-Taking an observed threshold of 10 to 15 qubits for API method overhead to become much larger than noise levels, we regressed the high qubit end of each graph for an exponential fit for time against qubits. These regression equations are presented in tables of representative samplings of the API. The results follow this equation:
+Grover's algorithm is a relatively ideal test case, in that it allows a minimum of abstraction in implementation while representing an ostensibly practical and common task for truly quantum computational hardware. For 1 expected correct function inversion result, there is a well-defined highest likelihood search iteration count on half a period of the algorithm for a given number of oracle input permutations to search. This graphs shows average time against qubit count for an optimal half period search:
+
+.. image:: grovers.png
+
+A representative sample of Qrack methods were run for 100 trials per qubit as above, for parallel gates up to the full span of the qubits. Multiple bit gates spanned the full length of coherent qubits up to integer division flooring for 2 and 3 qubit gates. Taking an observed threshold of 10 to 15 qubits for API method overhead to become much larger than "noise" levels, we regressed the high qubit end of each graph for an exponential fit for time against qubits. These regression equations are presented in tables of representative samplings of the API. The results follow this equation:
 
 .. math::
    :label: regression_eq
 
    [Milliseconds] = \exp \left( [Base] \left( [No. of Qubits] + [Intercept] \right) \right)
 
-In addition to the base and intercept, the table also notes the "First Qubit" that passed the noise threshold for the high qubit end of the graph, on the basis of its R^2 statistic being just greater than or equal to 0.99. The R^2 and model p-value are also reported. Assuming a noise threshold, note that these equations are expected to be biased in the direction of underestimating the exponential "Base" of the relationship. "Intercept" is then an estimate of how many qubits it would take for the method to 1 millisecond on average.
+In addition to the base and intercept, the table also notes the "First Qubit" that passed the noise threshold for the high qubit end of the graph, on the basis of its R^2 statistic being just greater than or equal to 0.99. The R^2 and model p-value are also reported. Assuming a "noise" threshold, note that these equations are expected to be biased in the direction of underestimating the exponential "Base" of the relationship. "Intercept" is then an estimate of how many qubits it would take for the method to 1 millisecond on average.
 
 QEngineCPU and QEngineOCL are largely reprentative of the worst case behavior for the optimized QUnit. For bitwise parallel gates, QUnit methods are fast enough to be largely swamped by noise for the test cases of 3 to 24 qubits. We present QEngineCPU and QEngineOCL in greater detail than QUnit in order to show the limits of both kinds of registers, and because QUnit's deviation from worst case will depend greatly on use case. Note that QUnit could additionally incur significant overhead in the act of entangling representations of subunits, whereas our test suite does not expect to capture this source of overhead, but this overhead does not persist once a QUnit reaches maximal entanglement of subsystems.
 
