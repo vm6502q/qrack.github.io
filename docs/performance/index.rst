@@ -100,14 +100,14 @@ A representative sample of Qrack methods were run for 100 trials per qubit as ab
 
 In addition to the base and intercept, the table also notes the "First Qubit" that passed the noise threshold for the high qubit end of the graph, on the basis of its R^2 statistic being just greater than or equal to 0.99. The R^2 and model p-value are also reported. Assuming a "noise" threshold, note that these equations are expected to be biased in the direction of underestimating the exponential "Base" of the relationship. "Intercept" is then an estimate of how many qubits it would take for the method to 1 millisecond on average.
 
-QEngineCPU and QEngineOCL are largely reprentative of the worst case behavior for the optimized QUnit. For bitwise parallel gates, QUnit methods are fast enough to be largely swamped by noise for the test cases of 3 to 24 qubits. We present QEngineCPU and QEngineOCL in greater detail than QUnit in order to show the limits of both kinds of registers, and because QUnit's deviation from worst case will depend greatly on use case. Note that QUnit could additionally incur significant overhead in the act of entangling representations of subunits, whereas our test suite does not expect to capture this source of overhead, but this overhead does not persist once a QUnit reaches maximal entanglement of subsystems.
+The quantum Fourier transform ("QFT") is consistently the slowest register-like operation. This offers a reasonable control case, as QFT is one of the only register-like API methods implemented in terms of calls to other fundamental gate methods.
 
 Software
 ========
 
 These are a representative sample of regression equations for QEngineCPU. Testing was carried out on parallel gates across the full width of a coherent unit of quantum memory, up to integer flooring on 2 and 3 qubit gates.
 
-.. csv-table:: Regressed CPU Speed Equations
+.. csv-table:: Regressed QEngineCPU Speed Equations
   :header: "Method","First Qubit","Base","Intercept","R^2","p-value"
   :widths: auto
   
@@ -184,12 +184,14 @@ We might speculate that, at high qubit counts, the calculations operate almost e
 Further Work
 ************
 
-We suggest that a good next primary target for optimizing Qrack is to allow cluster distribution of all the various engine types. Also, CPU "software" implementation parallelism relies on certain potentially expensive standard library functionality, like lambda expressions, and might still be micro-optimized. We will also develop and maintain systematic comparisons to published benchmarks of quantum computer simulation standard libraries, as they arise.
+We suggest that a good next primary target for optimizing Qrack is to allow cluster distribution of all the various engine types. Also, CPU "software" implementation parallelism relies on certain potentially expensive standard library functionality, like lambda expressions, and might still be micro-optimized. The API offers many optimized bitwise parallel operations over contiguous bit strings, but similar methods for discontiguous bit sets should be feasible with bit masks, if there is a reasonable demand for them. Further, there is still opportunity for better constant bitwise parallelism cost coverage and better explicit qubit subsystem separation in QUnit.
+
+We will also develop and maintain systematic comparisons to published benchmarks of quantum computer simulation standard libraries, as they arise.
 
 Conclusion
 **********
 
-`arXiv:1710.05867`_
+Per `arXiv:1710.05867`_, explicitly separated subsystems of qubits in QUnit have a significant RAM and speed edge in many cases over the "Schrödinger algorithm" of QEngineCPU and QEngineOCL. One of Qrack's greatest new optimizations to either general algorithm is constant complexity or "free" scaling of bitwise parallelism in entangled subsystems, compared to linear complexity scaling without this optimization. Qrack gives at least reasonably efficient performance on a single node up to approximately 30 qubits, in the limit of maximal entanglement.
 
 Citations
 *********
