@@ -66,6 +66,8 @@ Method
 
 The test machine has an 04WT2G Alienware motherboard with Alienware BIOS A15. Its CPU is an Intel(R) Core(TM) i7-4910MQ. Its GPU is an NVIDIA Corporation GM204M [GeForce GTX 970M]. Its operating system is Ubuntu 16.04.4 LTS. It has 24GB of 1600MHz DDR3 RAM in 8GBx2 and 4GBx2 SODIMM configuration.
 
+Heap profiling was carried out with Valgrind Massif. Heap sampling was limited but ultimately sufficient to show statistical confidence.
+
 Results
 *******
 
@@ -80,6 +82,10 @@ QEngineCPU and QEngineOCL can perform many identical gates in parallel across en
 .. image:: x_all.png
 
 .. image:: cnot_all.png
+
+Heap sampling showed high confidence adherence to theoretical expecations. Complex numbers are represented as 2 double (64-bit) accuracy floating point types, for real and imaginary components. There is one complex number per permutation in a separable subsystem of qubits. QUnit explicitly separates subsystems, while QEngine maintains complex amplitudes for all 2^N permutations of N qubits. QEngines duplicate their state vectors once for speed and simplicity where it eases implementation.
+
+.. image:: qrack_ram.png
 
 Taking an observed threshold of 10 to 15 qubits for API method overhead to become much larger than noise levels, we regressed the high qubit end of each graph for an exponential fit for time against qubits. These regression equations are presented in tables of representative samplings of the API. The results follow this equation:
 
