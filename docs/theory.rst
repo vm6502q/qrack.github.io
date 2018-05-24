@@ -23,6 +23,7 @@ Grover Search Algorithm
 .. [Grover] `Grover Search Algorithm <https://en.wikipedia.org/wiki/Grover%27s_algorithm>`_
 .. [GroverSummary] `Introduction to Implementing Grover's Search Algorithm <http://twistedoakstudios.com/blog/Post2644_grovers-quantum-search-algorithm>`_
 .. [GroverVisual] `Visualization of Grover's Search Algorithm <http://davidbkemp.github.io/animated-qubits/grover.html>`_
+.. [Broda2016] `Broda, Bogusław. "Quantum search of a real unstructured database." The European Physical Journal Plus 131.2 (2016): 38. <https://arxiv.org/abs/1502.04943>`_
 
 Quantum Bit Simulation
 ----------------------
@@ -382,6 +383,8 @@ Note that the VM6502Q X-addressed LDA, ADC, and SBC operations can load, add, or
 		0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
 		0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 
 	\end{bmatrix}
+
+This allows search of a "real unstructured database" or unstructured lookup table, per [Broda2016]. That paper also proposes a model for the memory of the lookup table.
 
 6502 Reference Documents
 ------------------------

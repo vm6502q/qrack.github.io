@@ -202,4 +202,3 @@ Citations
 .. _`QHipster`: https://TBD.com
 .. _`Quantiki`: https://www.quantiki.org/wiki/list-qc-simulators
 .. _`Breaking the 49-Qubit Barrier in the Simulation of Quantum Circuits`: https://arxiv.org/abs/1710.05867
-.. _`Quantum search of a real unstructured database`: https://arxiv.org/abs/1502.04943
