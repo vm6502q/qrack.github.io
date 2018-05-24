@@ -30,6 +30,13 @@ As a demonstration of the :cpp:class:`Qrack::QInterface` implementation, a MOS-6
 
 Finally, a `6502 toolchain <https://github.com/vm6502q/cc65>`_ - based on `CC65 <http://cc65.github.io/doc/>`_ - has been modified and enhanced to support both the new opcodes - for the assembler - as well as :ref:`c-syntax-enhancements-ref`.  This is performed primarily as sandbox/exploratory work to help clarify what quantum computational software engineering might look like as the hardware reaches commoditization.
 
+Copyright
+---------
+
+Copyright (c) Daniel Strano 2017 and the Qrack contributors. All rights reserved.
+
+Daniel Strano would like to specifically note that Benn Bollay is almost entirely responsible for the implementation of QUnit and tooling, including unit tests, in addition to large amounts of work on the documentation and many other various contributions in intensive reviews. Also, thank you to Marek Karcz for supplying an awesome base classical 6502 emulator for proof-of-concept.
+
 .. toctree::
     :maxdepth: 2
     :hidden:
@@ -38,8 +45,8 @@ Finally, a `6502 toolchain <https://github.com/vm6502q/cc65>`_ - based on `CC65 
     start
     opencl
     examples
-    theory
     implementation
+    performance
 
 .. toctree::
     :hidden:
