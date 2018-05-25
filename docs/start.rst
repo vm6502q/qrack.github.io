@@ -66,7 +66,7 @@ The ``qrack`` project produces a ``libqrack.a`` archive, suitable for being link
 Performance
 ~~~~~~~~~~~
 
-TBD.
+See the extensive :doc:`performance analysis and graphs <performance>` section.
 
 Contributing
 ~~~~~~~~~~~~
