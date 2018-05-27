@@ -5,6 +5,8 @@
 Installing OpenCL
 =================
 
+OpenCL development libraries are required to enable GPU support for Qrack. OpenCL library installation instructions vary widely depending on hardware vendor and operating system. See the instructions from your hardware vendor (NVIDIA, Intel, AMD, etc.) for your operating system, for installing OpenCL development libraries. The `OpenCL C++ bindings header <https://github.khronos.org/OpenCL-CLHPP/>`_ is also required, though it might be included with your vendor's development libraries installation.
+
 VMWare
 ------
 

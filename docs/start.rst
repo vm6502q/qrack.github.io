@@ -1,6 +1,15 @@
 Getting Started
 ---------------
 
+Prerequisites
+~~~~~~~~~~~~~
+
+Qrack compiles with a C++11 compiler, such as g++ or clang++, with any required compilation flags to enable the C++11 standard.
+
+You also need CMake to build. `CMake installation instructions can be found here. <https://cmake.org/install/>`_
+
+Optional GPU support is provided by OpenCL development libraries. See :ref:`installing-opencl-reference` for further instructions.
+
 Checking Out
 ~~~~~~~~~~~~
 
