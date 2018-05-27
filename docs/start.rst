@@ -1,6 +1,13 @@
 Getting Started
 ---------------
 
+Prerequisites
+~~~~~~~~~~~~~
+
+Qrack requires CMake to build. `CMake installation instructions can be found here. <https://cmake.org/install/>`_
+
+Optional GPU support is provided by OpenCL development libraries. See :ref:`installing-opencl-reference` for further instructions.
+
 Checking Out
 ~~~~~~~~~~~~
 
