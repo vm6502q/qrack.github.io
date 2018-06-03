@@ -18,4 +18,9 @@ VMWare
 #.  Install OpenGL headers: ``$ sudo apt install mesa-common-dev``
 #.  Adjust the ``Makefile`` to have the appropriate search paths, if they are not already correct.
 
+Installing OpenCL on Mac
+------------------------
 
+While the OpenCL framework is available by default on most modern Macs, the C++ header “cl.hpp” or “cl2.hpp” is usually not. One option for building for OpenCL is to download this header file and include it in include/OpenCL (as “cl.hpp”). The OpenCL C++ header can be found at the Khronos OpenCL registry:
+
+`https://www.khronos.org/registry/OpenCL/ <https://www.khronos.org/registry/OpenCL/>`_
