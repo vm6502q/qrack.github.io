@@ -58,6 +58,7 @@ Compile in the ``vm6502q`` project.  This will build both the ``vm6502q`` emulat
 To enable float accuracy as opposed to double, run CMake with the appropriate flag:
 
 .. code-block:: bash
+
     qc/ $ cd qrack/build && cmake -DENABLE_COMPLEX8=ON ..
 
 Testing
