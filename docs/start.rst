@@ -51,6 +51,16 @@ Compile in the ``vm6502q`` project.  This will build both the ``vm6502q`` emulat
             # OR if no OpenCL is available
    vm6502q/ $ ENABLE_OPENCL=0 make
 
+.. note::
+
+    Qrack compiles with either double or single accuracy complex numbers. Doubles are used by default. Single float accuracy uses almost exactly half as much RAM, allowing one additional qubit. Single accuracy may also be faster or the only compatible option for certain OpenCL devices, such as accelerators. Double vectorization uses AVX, while single vectorization uses SSE 1.0.
+
+To enable float accuracy as opposed to double, run CMake with the appropriate flag:
+
+.. code-block:: bash
+
+    qc/ $ cd qrack/build && cmake -DENABLE_COMPLEX8=ON ..
+
 Testing
 ~~~~~~~
 
