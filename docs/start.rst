@@ -64,7 +64,49 @@ To enable float accuracy as opposed to double, run CMake with the appropriate fl
 Using the API
 ~~~~~~~~~~~~~
 
-Qrack API methods operate on "QEngine" and "QUnit" objects. ("QUnit" objects are a specific optional optimization on "QEngine" objects, with the same API interface.) These objects are organized as 1-dimensional arrays of coherent qubits which can be arbitrarily entangled within the QEngine or QUnit. These object have methods that act like quantum gates, for a specified qubit index in the 1-dimensional array, as well as any analog parameters needed for the gate (like for variable angle rotation gates). Many fundamental gate methods have variants that are optimized to act on a contiguous length of qubits in the array at once. For (OpenCL) QEngineOCL objects, the preferred OpenCL device can be specified in the constructor. For (multiprocessor) QEngineOCLMulti engines, you can specify distribution of equal-sized sub-engines between available OpenCL devices. See the API reference for more details. 
+Qrack API methods operate on "QEngine" and "QUnit" objects. ("QUnit" objects are a specific optional optimization on "QEngine" objects, with the same API interface.) These objects are organized as 1-dimensional arrays of coherent qubits which can be arbitrarily entangled within the QEngine or QUnit. These object have methods that act like quantum gates, for a specified qubit index in the 1-dimensional array, as well as any analog parameters needed for the gate (like for variable angle rotation gates). Many fundamental gate methods have variants that are optimized to act on a contiguous length of qubits in the array at once. For (OpenCL) ``QEngineOCL`` objects, the preferred OpenCL device can be specified in the constructor. For (multiprocessor) ``QEngineOCLMulti`` engines, you can specify distribution of equal-sized sub-engines between available OpenCL devices. See the API reference for more details.
+
+By default, the ``Qrack::OCLEngine`` singleton attempts to compile kernels and initialize supporting OpenCL objects for all devices on a system. You can strike devices from the list to free their OpenCL resources, usually before initializing OpenCL QEngine objects:
+
+.. code-block:: c
+
+    // Initialize the singleton and get the list of devices
+    std::vector<Qrack::OCLDeviceContext> devices = OCLEngine::Instance()->GetDeviceContextPtrVector();
+    std::vector<Qrack::OCLDeviceContext> filteredDevices;
+
+    // Iterate through the list with cl::Device::getInfo to check devices for desirability
+    std::string devCheck("HD");
+    for (int i = 0; i < devices.size(); i++) {
+        // From the OpenCL C++ API headers:
+        string devName = std::string(devices[i].getInfo<CL_DEVICE_NAME>());
+        // Check properties...
+        if (devName.find(devCheck) != string::npos) {
+            // Take or remove devices selectively
+            filteredDevices.push_back(devices[i]);
+        }
+    }
+
+    // Replace the original list with the filtered one, and (with an optional argument) specify the default device.
+    OCLEngine::Instance()->SetDeviceContextPtrVector(filteredDevices, filteredDevices[0]);
+
+With or without this kind of filtering, the device or devices used by OpenCL-based engines can be specified explicitly in their constructors:
+
+.. code-block:: c
+    
+    // "deviceID" is the (int) index of the desired device in the OCLEngine list:
+    int deviceID = 0;
+    QEngineOCL qEngine = QEngineOCL(qBitCount, initPermutation, random_generator_pointer, deviceID);
+
+    // "deviceIDs" is a std::vector<int> of indices of the desired device in the OCLEngine list.
+    // This also might be used for a simple form of load-balancing, like so:
+    std::vector<int> deviceIDs(4);
+    // Three equally-sized sub-engines go to device index 1, and a fourth sub-engine goes to device index 0.
+    // The number of sub-engines must be a power of two.
+    deviceIDs[0] = 1;
+    deviceIDs[0] = 1;
+    deviceIDs[0] = 1;
+    deviceIDs[0] = 0;
+    QEngineOCL qEngineMulti = QEngineOCLMulti(qBitCount, initPermutation, deviceIDs, random_generator_pointer);
 
 Testing
 ~~~~~~~
