@@ -61,6 +61,11 @@ To enable float accuracy as opposed to double, run CMake with the appropriate fl
 
     qc/ $ cd qrack/build && cmake -DENABLE_COMPLEX8=ON ..
 
+Using the API
+~~~~~~~~~~~~~
+
+Qrack API methods operate on "QEngine" and "QUnit" objects. ("QUnit" objects are a specific optional optimization on "QEngine" objects, with the same API interface.) These objects are organized as 1-dimensional arrays of coherent qubits which can be arbitrarily entangled within the QEngine or QUnit. These object have methods that act like quantum gates, for a specified qubit index in the 1-dimensional array, as well as any analog parameters needed for the gate (like for variable angle rotation gates). Many fundamental gate methods have variants that are optimized to act on a contiguous length of qubits in the array at once. For (OpenCL) QEngineOCL objects, the preferred OpenCL device can be specified in the constructor. For (multiprocessor) QEngineOCLMulti engines, you can specify distribution of equal-sized sub-engines between available OpenCL devices. See the API reference for more details. 
+
 Testing
 ~~~~~~~
 
