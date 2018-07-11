@@ -37,23 +37,9 @@ Check out each of the major repositories into a project branch:
 Compiling
 ~~~~~~~~~
 
-.. note::
+The ``qrack`` project supports two primary implementations: OpenCL-optimized and software-only.  See :doc:`opencl` for details on installing OpenCL on some platforms, or your appropriate OS documentation. If you do not have OpenCL or do not wish to use it, supply the ``USE_OPENCL=OFF`` environment to ``cmake`` when building qrack the first time.
 
-    The ``qrack`` project supports two primary implementations: OpenCL-optimized and software-only.  See :doc:`opencl` for details on installing OpenCL on some platforms, or your appropriate OS documentation.
-
-    If you do not have OpenCL or do not wish to use it, supply the ``USE_OPENCL=OFF`` environment to ``cmake`` when building qrack the first time, and ``ENABLE_OPENCL=0`` to ``make`` when building ``vm6502q``.
-
-Compile in the ``vm6502q`` project.  This will build both the ``vm6502q`` emulator as well as the linked ``qrack`` project:
-
-.. code-block:: bash
-
-   vm6502q/ $ make
-            # OR if no OpenCL is available
-   vm6502q/ $ ENABLE_OPENCL=0 make
-
-.. note::
-
-    Qrack compiles with either double or single accuracy complex numbers. Doubles are used by default. Single float accuracy uses almost exactly half as much RAM, allowing one additional qubit. Single accuracy may also be faster or the only compatible option for certain OpenCL devices, such as accelerators. Double vectorization uses AVX, while single vectorization uses SSE 1.0.
+Qrack compiles with either double or single accuracy complex numbers. Doubles are used by default. Single float accuracy uses almost exactly half as much RAM, allowing one additional qubit. Single accuracy may also be faster or the only compatible option for certain OpenCL devices, such as accelerators. Double vectorization uses AVX, while single vectorization uses SSE 1.0.
 
 To enable float accuracy as opposed to double, run CMake with the appropriate flag:
 
@@ -64,7 +50,14 @@ To enable float accuracy as opposed to double, run CMake with the appropriate fl
 Using the API
 ~~~~~~~~~~~~~
 
-Qrack API methods operate on "QEngine" and "QUnit" objects. ("QUnit" objects are a specific optional optimization on "QEngine" objects, with the same API interface.) These objects are organized as 1-dimensional arrays of coherent qubits which can be arbitrarily entangled within the QEngine or QUnit. These object have methods that act like quantum gates, for a specified qubit index in the 1-dimensional array, as well as any analog parameters needed for the gate (like for variable angle rotation gates). Many fundamental gate methods have variants that are optimized to act on a contiguous length of qubits in the array at once. For (OpenCL) ``QEngineOCL`` objects, the preferred OpenCL device can be specified in the constructor. For (multiprocessor) ``QEngineOCLMulti`` engines, you can specify distribution of equal-sized sub-engines between available OpenCL devices. See the API reference for more details.
+Qrack API methods operate on "QEngine" and "QUnit" objects. ("QUnit" objects are a specific optional optimization on "QEngine" objects, with the same API interface.) These objects are organized as 1-dimensional arrays of coherent qubits which can be arbitrarily entangled within the QEngine or QUnit. These object have methods that act like quantum gates, for a specified qubit index in the 1-dimensional array, as well as any analog parameters needed for the gate (like for variable angle rotation gates). Many fundamental gate methods have variants that are optimized to act on a contiguous length of qubits in the array at once. For OpenCL ``QEngineOCL`` objects, the preferred OpenCL device can be specified in the constructor. For multiprocessor ``QEngineOCLMulti`` engines, you can specify distribution of equal-sized sub-engines between available OpenCL devices. See the API reference for more details.
+
+To create a QEngine or QUnit object, you can use the factory provided in include/qfactory.hpp:
+
+.. code-block:: c
+
+    QInterfacePtr qftReg = CreateQuantumInterface(QINTERFACE_QUNIT, QINTERFACE_OPENCL, qubitCount, intPerm, rng);
+    QInterfacePtr qftReg2 = CreateQuantumInterface(QINTERFACE_OPENCL, QINTERFACE_OPENCL, qubitCount, intPerm, rng);
 
 By default, the ``Qrack::OCLEngine`` singleton attempts to compile kernels and initialize supporting OpenCL objects for all devices on a system. You can strike devices from the list to free their OpenCL resources, usually before initializing OpenCL QEngine objects:
 
