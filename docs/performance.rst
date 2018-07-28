@@ -53,8 +53,9 @@ Disclaimers
 ===========
 
 * Your Mileage May Vary - Any performance metrics here are the result of
-  experiments executed on local machines; execute the supplied benchmarks on
-  the desired target system for accurate performance assessments.
+  experiments executed with selected compilation and execution parameters on a
+  system with a degree of variability; execute the supplied benchmarks on the
+  desired target system for accurate performance assessments.
 
 * Benchmarking is Hard - While we've attempted to perform clean and accurate
   results, bugs and mistakes do occur.  If flaws in process are identified,
@@ -63,9 +64,9 @@ Disclaimers
 Method
 ******
 
-100 timed trials of each method were run for each qubit count between 3 and 24 qubits. The average and quartile boundary values of each set of 100 were recorded and graphed. Grover's search to invert a black box subroutine, or "oracle," was similarly implemented for trials between 3 and 17 qubits. Grover's algorithm was iterated an optimal number of times, vs. qubit count, to maximize probability on a half cycle of the algorithm's period, being :math:`floor\left[\frac{\pi}{4asin\left(1/\sqrt{2^N}\right)}\right]` iterations for :math:`N` qubits.
+100 timed trials of each method were run for each qubit count between 3 and 28 qubits, on an AWS p3.8xlarge running Ubuntu Server 16.04LTS. The average and quartile boundary values of each set of 100 were recorded and graphed. Grover's search to invert a black box subroutine, or "oracle," was similarly implemented for trials between 3 and 16 qubits. Grover's algorithm was iterated an optimal number of times, vs. qubit count, to maximize probability on a half cycle of the algorithm's period, being :math:`floor\left[\frac{\pi}{4asin\left(1/\sqrt{2^N}\right)}\right]` iterations for :math:`N` qubits.
 
-The test machine has an 04WT2G Alienware motherboard with Alienware BIOS A15. Its CPU is an Intel(R) Core(TM) i7-4910MQ. Its GPU is an NVIDIA Corporation GM204M [GeForce GTX 970M]. Its operating system is Ubuntu 16.04.4 LTS. It has 24GB of 1600MHz DDR3 RAM in 8GBx2 and 4GBx2 SODIMM configuration.
+The 16 qubit data point for Grover's search was not included for QEngineCPU, which is not hardware accelerated, because the monetary cost of exhaustive benchmarking is prohibitive, and QEngineCPU as currently implemented now primarily represents a legacy engine that would usually not be used for real application of Qrack. QEngineOCLMulti is experimental and generally performed worse or no better than QEngineOCL, despite running on multiple processors at once. It would also not yet be used for practical applications, so we omit its results, noting that it performs worse than the single device engine. (We will elaborate in the discussion section.)
 
 Heap profiling was carried out with Valgrind Massif. Heap sampling was limited but ultimately sufficient to show statistical confidence.
 
@@ -78,13 +79,13 @@ We observed extremely close correspondence with theoretical complexity and RAM u
 
 .. image:: performance/cnot_single.png
 
-QEngineCPU and QEngineOCL can perform many identical gates in parallel across entangled subsystems for about the same cost as a single gate. To test this, we can apply parallel gates at once across the full width of a coherent array of qubits. (CNOT is a two bit gate, so :math:`(N-1)/2` gates are applied to odd numbers of qubits.) Notice in these next graphs how QEngineCPU and QEngineOCL have approximately the same scaling cost as the single gate graphs above, while QUnit types show a linear trend (appearing logarithmic on an exponential axis scale):
+QEngineCPU and QEngineOCL can perform many identical gates in parallel across entangled subsystems for an approximately constant costs, when total qubits in the engine are held fixed as breadth of the parallel gate application is varied. To test this, we can apply parallel gates at once across the full width of a coherent array of qubits. (CNOT is a two bit gate, so :math:`(N-1)/2` gates are applied to odd numbers of qubits.) Notice in these next graphs how QEngineCPU and QEngineOCL have similar scaling cost as the single gate graphs above, while QUnit types show a linear trend (appearing logarithmic on an exponential axis scale):
 
 .. image:: performance/x_all.png
 
 .. image:: performance/cnot_all.png
 
-Heap sampling showed high confidence adherence to theoretical expecations. Complex numbers are represented as 2 double (64-bit) accuracy floating point types, for real and imaginary components. There is one complex number per permutation in a separable subsystem of qubits. QUnit explicitly separates subsystems, while QEngine maintains complex amplitudes for all :math:`2^N` permutations of :math:`N` qubits. QEngines duplicate their state vectors once for speed and simplicity where it eases implementation.
+Heap sampling showed high confidence adherence to theoretical expecations. Complex numbers are represented as 2 double (64-bit) or 2 single (32-bit) accuracy floating point types, for real and imaginary components. The use of double or single precision is controlled by a compilation flag. There is one complex number per permutation in a separable subsystem of qubits. QUnit explicitly separates subsystems, while QEngine maintains complex amplitudes for all :math:`2^N` permutations of :math:`N` qubits. QEngines duplicate their state vectors once during most gates for speed and simplicity where it eases implementation.
 
 .. image:: performance/qrack_ram.png
 
@@ -94,109 +95,26 @@ Grover's algorithm is a relatively ideal test case, in that it allows a modicum 
 
 [Broda2016]_ discusses how Grover's might be adapted in practicality to actually "search an unstructured database," or search an unstructured lookup table, and Qrack is also capable of applying Grover's search to a lookup table with its IndexedLDA, IndexedADC, and IndexedSBC methods. Benchmarks are not given for this arguably more practical application of the algorithm, because few other quantum computer simulator libraries implement it, yet.
 
-A representative sample of Qrack methods were run for 100 trials per qubit as above, for parallel gates up to the full span of the qubits. Multiple bit gates spanned the full length of coherent qubits up to integer division flooring for 2 and 3 qubit gates. Taking an observed threshold of 10 to 15 qubits for API method overhead to become much larger than "noise" levels, we regressed the high qubit end of each graph for an exponential fit for time against qubits. These regression equations are presented in tables of representative samplings of the API. The results follow this equation:
-
-.. math::
-   :label: regression_eq
-
-   [Milliseconds] = \exp \left( [Base] \left( [No. of Qubits] + [Intercept] \right) \right)
-
-In addition to the base and intercept, the table also notes the "First Qubit" that passed the noise threshold for the high qubit end of the graph, on the basis of its :math:`R^2` statistic being just greater than or equal to :math:`0.99`. The :math:`R^2` and model p-value are also reported. Assuming a "noise" threshold, note that these equations are expected to be biased in the direction of underestimating the exponential "Base" of the relationship. "Intercept" is then an estimate of how many qubits it would take for the method to complete in 1 millisecond on average.
-
-The quantum Fourier transform ("QFT") is consistently the slowest register-like operation. This offers a reasonable control case, as QFT is one of the only register-like API methods implemented in terms of calls to other fundamental gate methods.
-
-Software
-========
-
-These are a representative sample of regression equations for QEngineCPU. Testing was carried out on parallel gates across the full width of a coherent unit of quantum memory, up to integer flooring on 2 and 3 qubit gates.
-
-.. csv-table:: Regressed QEngineCPU Speed Equations
-  :header: "Method","First Qubit","Base","Intercept","R^2","p-value"
-  :widths: auto
-  
-  "AND",13,0.672,-14.0,0.992,6.76E-12
-  "ASL",14,0.725,-13.8,0.991,1.46E-10
-  "CLAND",12,0.681,-11.4,0.993,2.41E-13
-  "CLOR",14,0.725,-13.8,0.991,1.46E-10
-  "CLXOR",14,0.725,-13.8,0.991,1.46E-10
-  "CNOT",12,0.677,-14.5,0.995,4.13E-14
-  "CRT",14,0.709,-13.3,0.991,1.70E-10
-  "CY",13,0.681,-12.9,0.990,2.75E-11
-  "INC",12,0.815,-19.0,0.996,8.70E-15
-  "INCC",12,0.627,-14.3,0.992,5.44E-13
-  "INCS",12,0.666,-15.1,0.991,1.12E-12
-  "INCSC",12,0.629,-14.3,0.992,6.75E-13
-  "IndexedADC",12,0.627,-14.0,0.995,8.37E-14
-  "IndexedLDA",13,0.632,-14.9,0.992,7.39E-12
-  "IndexedSBC",12,0.619,-13.3,0.991,1.07E-12
-  "LSL",14,0.774,-14.6,0.990,2.17E-10
-  "MReg",12,0.620,-15.2,0.993,4.56E-13
-  "OR",13,0.699,-12.4,0.992,9.37E-12
-  "PhaseFlip",13,0.646,-15.5,0.993,3.13E-12
-  "QFT",11,0.682,-7.98,0.990,2.18E-13
-  "ROL",15,0.856,-15.7,0.993,6.02E-10
-  "RT",10,0.683,-9.65,0.994,1.17E-15
-  "Swap",13,0.728,-14.9,0.992,7.78E-12
-  "X",16,0.933,-16.2,0.991,1.88E-08
-  "XOR",13,0.697,-13.5,0.992,7.01E-12  
-  "Y",12,0.678,-10.9,0.992,6.35E-13
-  
-  
-
-OpenCL
-======
-
-These are a representative sample of regression equations for QEngineOCL. Testing was carried out on parallel gates across the full width of a coherent unit of quantum memory, up to integer flooring on 2 and 3 qubit gates.
-
-.. csv-table:: Regressed QEngineOCL Speed Equations
-  :header: "Method","First Qubit","Base","Intercept","R^2","p-value"
-  :widths: auto
-
-  "AND",14,0.655,-13.7,0.990,2.42E-10
-  "ASL",13,0.595,-13.1,0.992,8.57E-12
-  "CLAND",11,0.662,-11.2,0.991,1.14E-13
-  "CLOR",12,0.624,-13.4,0.993,3.60E-13
-  "CLXOR",10,0.617,-13.9,0.990,2.05E-14
-  "CNOT",14,0.639,-13.8,0.994,2.80E-11
-  "CRT",11,0.678,-13.4,0.994,1.25E-14
-  "CY",11,0.678,-13.4,0.994,1.26E-14
-  "INC",14,0.642,-15.5,0.993,4.65E-11
-  "INCC",13,0.598,-14.0,0.991,1.71E-11
-  "INCS",14,0.642,-15.5,0.992,1.17E-10
-  "INCSC",15,0.645,-14.2,0.997,3.76E-11
-  "IndexedADC",14,0.592,-13.7,0.990,2.88E-10
-  "IndexedLDA",15,0.624,-14.2,0.994,3.49E-10
-  "IndexedSBC",14,0.614,-13.5,0.990,2.15E-10
-  "LSL",13,0.606,-13.9,0.991,1.42E-11
-  "MReg",12,0.603,-14.8,0.997,2.07E-15
-  "OR",13,0.669,-12.4,0.991,1.78E-11
-  "PhaseFlip",13,0.645,-15.6,0.990,1.96E-11
-  "QFT",10,0.704,-9.18,0.991,7.80E-15
-  "ROL",14,0.641,-15.5,0.992,7.35E-11
-  "RT",11,0.685,-11.5,0.995,3.71E-15
-  "Swap",14,0.643,-15.5,0.993,6.23E-11
-  "X",14,0.642,-15.6,0.992,7.46E-11
-  "XOR",14,0.650,-12.7,0.991,1.70E-10
-  "Y",10,0.680,-11.7,0.994,8.93E-16
-
 Discussion
 **********
 
 Up to a consistent deviation at low qubit counts, speed and RAM usage is well predicted by theoretical complexity considerations of the gates, up to a factor of 2 on heap usage for duplication of the state vector.
 
-We might speculate that, at high qubit counts, the calculations operate almost entirely on heap, while system call and cache hit efficiency consistently alter the trend up until around roughly 12 qubits, on the test machine, causing the apparent inflection points observed in the graphs given above. For "software" simulation, this would be roughly consistent with the advertised 8MB cache of the i7-4910MQ. If the reduction in the slope of the trend to this point is primarily due to cache hit, about 8 fully entangled qubits would be ideal for an 8MB cache.
+We might speculate that, at high qubit counts, the calculations operate almost entirely on heap, while system call and cache hit efficiency consistently alter the trend up until a persistent and detectable "bump" at around roughly 8 qubits for the software implementation, and another "bump" at around 17 qubits for the hardware-accelerated engine, on the P3 test machine. For "software" simulation, this would be roughly consistent with a 4MB cache. For the hardware acceleration, this implies a preferred faster RAM bank of about 2GB.
+
+QEngineOCLMulti, an OpenCL-based multiprocessor engine based on the algorithms developed in Intel's [QHiPSTER]_, fails to outperform the single processor QEngineOCL. We include it in the current release to help the open source community realize a practical multiprocessor implementation in the context of Qrack. A branch of the multiprocessor engine has already been implemented with dynamic load balancing between processors, but it produced no significant improvement. By deduction, likely, we guess that the explicit reliance on general "host" RAM banks for storing the substate vectors creates a bottleneck, when multiple processors need to communicate with general RAM at the same time on the same bus. To alleviate this, a new QEngineOCLMulti implementation might assume that each processor device has a large personal store of memory, at least 4 or 8 GB, in which case OpenCL could be told explicitly to allocate substate vectors in device memory and not use "host" RAM at all for storing the state vector.
 
 Further Work
 ************
 
-We suggest that a good next primary target for optimizing Qrack is to allow cluster distribution of all the various engine types. Also, CPU "software" implementation parallelism relies on certain potentially expensive standard library functionality, like lambda expressions, and might still be micro-optimized. The API offers many optimized bitwise parallel operations over contiguous bit strings, but similar methods for discontiguous bit sets should be feasible with bit masks, if there is a reasonable demand for them. Further, there is still opportunity for better constant bitwise parallelism cost coverage and better explicit qubit subsystem separation in QUnit.
+Qrack has been successfully run on multiple processors at once, and even on clusters, but not with practical performance for real application; a good next step is to redesign the multiprocessor engine to actually outperform the single device engine. Also, CPU "software" implementation parallelism relies on certain potentially expensive standard library functionality, like lambda expressions, and might still be micro-optimized. The API offers many optimized bitwise parallel operations over contiguous bit strings, but similar methods for discontiguous bit sets should be feasible with bit masks, if there is a reasonable demand for them. Further, there is still opportunity for better constant bitwise parallelism cost coverage and better explicit qubit subsystem separation in QUnit.
 
 We will also develop and maintain systematic comparisons to published benchmarks of quantum computer simulation standard libraries, as they arise.
 
 Conclusion
 **********
 
-Per [Pednault2017]_, explicitly separated subsystems of qubits in QUnit have a significant RAM and speed edge in many cases over the "Schrödinger algorithm" of QEngineCPU and QEngineOCL. One of Qrack's greatest new optimizations to either general algorithm is constant complexity or "free" scaling of bitwise parallelism in entangled subsystems, compared to linear complexity scaling without this optimization. Qrack gives at least reasonably efficient performance on a single node up to about 30 qubits, in the limit of maximal entanglement.
+Per [Pednault2017]_, explicitly separated subsystems of qubits in QUnit have a significant RAM and speed edge in many cases over the "Schrödinger algorithm" of QEngineCPU and QEngineOCL. One of Qrack's greatest new optimizations to either general algorithm is constant complexity or "free" scaling of bitwise parallelism in entangled subsystems, compared to linear complexity scaling without this optimization. Qrack gives very efficient performance on a single node up to at least about 30 qubits, in the limit of maximal entanglement.
 
 Citations
 *********
