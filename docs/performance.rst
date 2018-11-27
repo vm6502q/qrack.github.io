@@ -39,6 +39,14 @@ of projects.  As such, it is an ideal test-bed for establishing a set of
 benchmarks useful for comparing performance between various quantum
 simulators.
 
+Qrack provides a "QEngineCPU" and a "QEngineOCL" that represent non-OpenCL and 
+OpenCL base implementations, which could also be the most efficient types to 
+use directly in the limit of maximal entanglement. For general use cases, 
+the "QUnit" layer provides explicit Schmidt decomposition on top of another 
+engine type, (per [Pednault2017]_,) and "QFusion" provides a "gate fusion" 
+layer. A "QEngine" type is always the base layer, and QUnit and QFusion types 
+may be layered over these, and over each other.
+
 Future publications will compare the performance of Qrack against other
 publicly available simulators, as rigorous implementations can be implemented.
 
@@ -64,9 +72,7 @@ Disclaimers
 Method
 ******
 
-100 timed trials of each method were run for each qubit count between 3 and 28 qubits, on an AWS p3.8xlarge running Ubuntu Server 16.04LTS. The average and quartile boundary values of each set of 100 were recorded and graphed. Grover's search to invert a black box subroutine, or "oracle," was similarly implemented for trials between 3 and 16 qubits. Grover's algorithm was iterated an optimal number of times, vs. qubit count, to maximize probability on a half cycle of the algorithm's period, being :math:`floor\left[\frac{\pi}{4asin\left(1/\sqrt{2^N}\right)}\right]` iterations for :math:`N` qubits.
-
-The 16 qubit data point for Grover's search was not included for QEngineCPU, which is not hardware accelerated, because the monetary cost of exhaustive benchmarking is prohibitive, and QEngineCPU as currently implemented now primarily represents a legacy engine that would usually not be used for real application of Qrack. QEngineOCLMulti is experimental and generally performed worse or no better than QEngineOCL, despite running on multiple processors at once. It would also not yet be used for practical applications, so we omit its results, noting that it performs worse than the single device engine. (We will elaborate in the discussion section.)
+100 timed trials of each method were run for each qubit count between 3 and 28 qubits. CPU and GPU benchmarks were run on two respective systems that could represent realistic use cases for each engine type. An AWS p3.2xlarge running Ubuntu Server 18.04LTS was used for GPU benchmarks. An Alienware 17 R5 with an Intel(R) Core(TM) i7-8750H running Ubuntu 18.04LTS was used for CPU benchmarks. The average and quartile boundary values of each set of 100 were recorded and graphed. Grover's search to invert a black box subroutine, or "oracle," was similarly implemented for trials between 3 and 18 qubits. Grover's algorithm was iterated an optimal number of times, vs. qubit count, to maximize probability on a half cycle of the algorithm's period, being :math:`floor\left[\frac{\pi}{4asin\left(1/\sqrt{2^N}\right)}\right]` iterations for :math:`N` qubits.
 
 Heap profiling was carried out with Valgrind Massif. Heap sampling was limited but ultimately sufficient to show statistical confidence.
 
@@ -102,12 +108,12 @@ Up to a consistent deviation at low qubit counts, speed and RAM usage is well pr
 
 We might speculate that, at high qubit counts, the calculations operate almost entirely on heap, while system call and cache hit efficiency consistently alter the trend up until a persistent and detectable "bump" at around roughly 8 qubits for the software implementation, and another "bump" at around 17 qubits for the hardware-accelerated engine, on the P3 test machine. For "software" simulation, this would be roughly consistent with a 4MB cache. For the hardware acceleration, this implies a preferred faster RAM bank of about 2GB.
 
-QEngineOCLMulti, an OpenCL-based multiprocessor engine based on the algorithms developed in Intel's [QHiPSTER]_, fails to outperform the single processor QEngineOCL. We include it in the current release to help the open source community realize a practical multiprocessor implementation in the context of Qrack. A branch of the multiprocessor engine has already been implemented with dynamic load balancing between processors, but it produced no significant improvement. By deduction, likely, we guess that the explicit reliance on general "host" RAM banks for storing the substate vectors creates a bottleneck, when multiple processors need to communicate with general RAM at the same time on the same bus. To alleviate this, a new QEngineOCLMulti implementation might assume that each processor device has a large personal store of memory, at least 4 or 8 GB, in which case OpenCL could be told explicitly to allocate substate vectors in device memory and not use "host" RAM at all for storing the state vector.
+Qrack contains an experimental multiprocessor type, previously "QEngineOCLMulti" based on the algorithms developed in Intel's [QHiPSTER]_, currently replaced in favor of the simpler QUnitMulti type, which dispatches different separable subsystems to different processors. Current and previous generation multiprocessor types fail to outperform the single processor QEngineOCL. We include it in the current release to help the open source community realize a practical multiprocessor implementation in the context of Qrack.
 
 Further Work
 ************
 
-Qrack has been successfully run on multiple processors at once, and even on clusters, but not with practical performance for real application; a good next step is to redesign the multiprocessor engine to actually outperform the single device engine. Also, CPU "software" implementation parallelism relies on certain potentially expensive standard library functionality, like lambda expressions, and might still be micro-optimized. The API offers many optimized bitwise parallel operations over contiguous bit strings, but similar methods for discontiguous bit sets should be feasible with bit masks, if there is a reasonable demand for them. Further, there is still opportunity for better constant bitwise parallelism cost coverage and better explicit qubit subsystem separation in QUnit.
+Qrack has been successfully run on multiple processors at once, and even on clusters, but not with practical performance for real application; a good next step is to redesign the multiprocessor engine type(s) to actually outperform the single device engine. Also, CPU "software" implementation parallelism relies on certain potentially expensive standard library functionality, like lambda expressions parallel "futures," and might still be optimized. Further, there is still opportunity for better explicit qubit subsystem separation in QUnit.
 
 We will also develop and maintain systematic comparisons to published benchmarks of quantum computer simulation standard libraries, as they arise.
 
