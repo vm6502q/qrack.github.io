@@ -106,12 +106,10 @@ Discussion
 
 Up to a consistent deviation at low qubit counts, speed and RAM usage is well predicted by theoretical complexity considerations of the gates, up to a factor of 2 on heap usage for duplication of the state vector.
 
-We might speculate that, at high qubit counts, the calculations operate almost entirely on heap, while system call and cache hit efficiency consistently alter the trend up until a persistent and detectable "bump" at around roughly 8 qubits for the software implementation, and another "bump" at around 17 qubits for the hardware-accelerated engine, on the P3 test machine. For "software" simulation, this would be roughly consistent with a 4MB cache. For the hardware acceleration, this implies a preferred faster RAM bank of about 2GB.
-
-Qrack contains an experimental multiprocessor type, previously "QEngineOCLMulti" based on the algorithms developed in Intel's [QHiPSTER]_, currently replaced in favor of the simpler QUnitMulti type, which dispatches different separable subsystems to different processors. Current and previous generation multiprocessor types fail to outperform the single processor QEngineOCL. We include it in the current release to help the open source community realize a practical multiprocessor implementation in the context of Qrack.
-
 Further Work
 ************
+
+Qrack contains an experimental multiprocessor type, previously "QEngineOCLMulti" based on the algorithms developed in Intel's [QHiPSTER]_, currently replaced in favor of the simpler QUnitMulti type, which dispatches different separable subsystems to different processors. Current and previous generation multiprocessor types fail to outperform the single processor QEngineOCL. We include it in the current release to help the open source community realize a practical multiprocessor implementation in the context of Qrack.
 
 Qrack has been successfully run on multiple processors at once, and even on clusters, but not with practical performance for real application; a good next step is to redesign the multiprocessor engine type(s) to actually outperform the single device engine. Also, CPU "software" implementation parallelism relies on certain potentially expensive standard library functionality, like lambda expressions parallel "futures," and might still be optimized. Further, there is still opportunity for better explicit qubit subsystem separation in QUnit.
 
