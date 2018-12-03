@@ -132,7 +132,7 @@ Qrack has been successfully run on multiple processors at once, and even on clus
 
 With a new generation of "VPU" processors coming in 2019, (for visual inference,) it might be possible to co-opt VPU capabilities for inference of raw state vector features, such as Schmidt separability, to improve the performance of QUnit. The authors of Qrack have just started looking at this hardware for this purpose.
 
-We will also develop and maintain systematic comparisons to published benchmarks of quantum computer simulation standard libraries, as they arise.
+We will maintain systematic comparisons to published benchmarks of quantum computer simulation standard libraries, as they arise.
 
 Conclusion
 **********
