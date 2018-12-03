@@ -47,8 +47,11 @@ engine type, (per [Pednault2017]_,) and "QFusion" provides a "gate fusion"
 layer. A "QEngine" type is always the base layer, and QUnit and QFusion types 
 may be layered over these, and over each other.
 
-Future publications will compare the performance of Qrack against other
-publicly available simulators, as rigorous implementations can be implemented.
+This version of the Qrack benchmarks contains comparisons against other
+publicly available simulators, specifically QCGPU and ProjectQ (with its
+default simulator). Note that Qrack has been incorporated into an optional
+back end for ProjectQ, in a fork maintained by the developers of Qrack, and
+benchmarks for its performance will follow.
 
 Reader Guidance
 ===============
@@ -72,7 +75,11 @@ Disclaimers
 Method
 ******
 
-100 timed trials of single and parallel gates were run for each qubit count between 3 and 28 qubits. CPU and GPU benchmarks were run on two respective systems that could represent realistic use cases for each engine type. An AWS p3.2xlarge running Ubuntu Server 18.04LTS was used for GPU benchmarks. An Alienware 17 R5 with an Intel(R) Core(TM) i7-8750H running Ubuntu 18.04LTS was used for CPU benchmarks. The average and quartile boundary values of each set of 100 were recorded and graphed. Grover's search to invert a black box subroutine, or "oracle," was similarly implemented for trials between 3 and 18 qubits. Grover's algorithm was iterated an optimal number of times, vs. qubit count, to maximize probability on a half cycle of the algorithm's period, being :math:`floor\left[\frac{\pi}{4asin\left(1/\sqrt{2^N}\right)}\right]` iterations for :math:`N` qubits. A quantum fourier transform was run for 100 trials between 3 and 26 qubits on the GPU engine types.
+100 timed trials of single and parallel gates were run for each qubit count between 3 and 28 qubits. CPU and GPU benchmarks were run on two respective systems that could represent realistic use cases for each engine type. An AWS p3.2xlarge running Ubuntu Server 18.04LTS was used for GPU benchmarks. An Alienware 17 R5 with an Intel(R) Core(TM) i7-8750H running Ubuntu 18.04LTS was used for Qrack CPU benchmarks. The average and quartile boundary values of each set of 100 were recorded and graphed. Grover's search to invert a black box subroutine, or "oracle," was similarly implemented for trials between 3 and 18 qubits. Grover's algorithm was iterated an optimal number of times, vs. qubit count, to maximize probability on a half cycle of the algorithm's period, being :math:`floor\left[\frac{\pi}{4asin\left(1/\sqrt{2^N}\right)}\right]` iterations for :math:`N` qubits.
+
+A quantum fourier transform was run for 100 trials between 3 and 26 qubits on the GPU engine types. ProjectQ and QCGPU were also benchmarked for this test, on an AWS p3.2xlarge running Ubuntu Server 18.04LTS, with the benchmarking code provided by QCGPU, in python. The benchmarking script from QCGPU iterates at random between the engine options. 200 total trials were run for the set of QCGPU and ProjectQ, selected by approximately equal probability random chance in each of the 200 iterations.
+
+QFT iterations were "chained" in a unitary manner starting from the |0> permutation state, such that every other step entangled and unentangled the full set of qubits. This is a representative test of Qrack::QUnit performance, because it varies largely with degree of representational entanglement. QUnit explicitly separates the representation of qubit subsystems when it can, such that performance differs greatly between entirely separable and entirely entangled cases, hence we need to show best and worst cases. Separability considerations do not affect maximally entangled representations, as are all other simulators tested here, (though ProjectQ includes a compilation layer on top of its default simulator). 
 
 Heap profiling was carried out with Valgrind Massif. Heap sampling was limited but ultimately sufficient to show statistical confidence.
 
@@ -101,14 +108,20 @@ Grover's algorithm is a relatively ideal test case, in that it allows a modicum 
 
 [Broda2016]_ discusses how Grover's might be adapted in practicality to actually "search an unstructured database," or search an unstructured lookup table, and Qrack is also capable of applying Grover's search to a lookup table with its IndexedLDA, IndexedADC, and IndexedSBC methods. Benchmarks are not given for this arguably more practical application of the algorithm, because few other quantum computer simulator libraries implement it, yet.
 
-The Quantum Fourier transform (QFT) is another realistic test case. QEngineCPU took approximately 100 seconds per 1 trial (of 100) for 22 qubits and approximately 200 seconds for a 23 qubit QFT, and testing the QEngineCPU type therefore become prohibitive, for the full range of qubits between 3 and 26. To avoid confusion in the graph, and since QEngineCPU might therefore be impractical for large QFTs, we leave both it and its QUnit/QFusion variant off the graph. At the end of every QFT trial, explicit separability was reset with a measurement operation across the entire Fourier-transformed unit of qubits, i.e. every trial was the ideal case for QUnit of entirely separable qubits, which might not always be realistic. However, the whole set is fairly representative of the difference between best case, of total initial separability for QUnit, and worst case, of total entanglement, with QUnit's performance limiting to the QEngine case, plus modest wrapping and separability testing overhead from the QUnit layer. In the best case for QUnit, significant additional overhead is incurred in combining an additional qubit into the bulk QEngine at each step.
+The Quantum Fourier transform (QFT) is another realistic test case. Other simulators were also tested on the QFT. QFT operations were directly "chained," starting from the |0> permutation state. Qrack::QUnit was able to recover full (or virtually full) separability of qubits at every other step of 100 iterations, oscillating between modes of the "entangled" and "separable" QUnit median trends shown in the graph.
+
+QEngineCPU took approximately 100 seconds per 1 trial (of 100) for 22 qubits and approximately 200 seconds for a 23 qubit QFT, and testing the QEngineCPU type therefore become prohibitive, for the full range of qubits between 3 and 26. To avoid confusion in the graph, and since QEngineCPU might therefore be impractical for large QFTs, we leave both it and its QUnit/QFusion variant off the graph.
 
 .. image:: performance/qft.png
+
+For lower numbers of qubits, QEngineOCL outperforms QCGPU. Both simulators follow a smooth exponential trend that appears to reach a knee of faster exponential growth. The "knee" comes at a lower number of qubits for QEngineOCL than for QCGPU, at about 18 qubits versus 24. We will analyze the comparative results in the discussion section.
 
 Discussion
 **********
 
 Up to a consistent deviation at low qubit counts, speed and RAM usage is well predicted by theoretical complexity considerations of the gates, up to a factor of 2 on heap usage for duplication of the state vector.
+
+In the comparative QFT benchmarks, the difference between QCGPU and Qrack in the "knee" in the base engine might be partially do to scalable work distribution in the OpenCL kernels. QEngineOCL is written to distribute work among an arbitrarily small number of processing elements and max work item size. Max work item size is a device-specific hardware parameter limiting how many work items may be dispatched in an OpenCL kernel call. QEngineOCL can distribute large numbers of probability amplitude transformations to small numbers of work items, incurring additional looping overhead, whereas QCGPU is written to dispatch one work item to one processing element. QCGPU requires a large enough hardware max work item size to add higher numbers of qubits, which might or not might not prove prohibitive in addressing the largest possible amount of general RAM. Additionally, Qrack normalizes its state vector at on-the-fly opportunities, to correct for float rounding error, incurring overhead costs but benefiting the accuracy of the simulation over very long strings of gate applications.
 
 Further Work
 ************
