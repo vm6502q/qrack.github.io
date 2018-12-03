@@ -114,7 +114,7 @@ QEngineCPU took approximately 100 seconds per 1 trial (of 100) for 22 qubits and
 
 .. image:: performance/qft.png
 
-For lower numbers of qubits, QEngineOCL outperforms QCGPU. Both simulators follow a smooth exponential trend that appears to reach a knee of faster exponential growth. The "knee" comes at a lower number of qubits for QEngineOCL than for QCGPU, at about 18 qubits versus 24. We will analyze the comparative results in the discussion section.
+For lower numbers of qubits, QEngineOCL outperforms QCGPU. Both simulators follow a smooth exponential trend that appears to reach a knee of faster exponential growth. The "knee" comes at a lower number of qubits for QEngineOCL than for QCGPU, at about 18 qubits versus 24. There is no such "knee" apparent for the QUnit -> QFusion layers on top of a QEngine type. We will analyze the comparative results in the discussion section.
 
 Discussion
 **********
