@@ -102,6 +102,8 @@ Heap sampling showed high confidence adherence to theoretical expecations. Compl
 
 .. image:: performance/qrack_ram.png
 
+QUnit explicitly separates its representation of the quantum state and may operate with much less RAM, but QEngine's RAM usage represents approximately the worst case for QUnit, of maximal entanglement.
+
 Grover's algorithm is a relatively ideal test case, in that it allows a modicum of abstraction in implementation while representing an ostensibly practical and common task for truly quantum computational hardware. For 1 expected correct function inversion result, there is a well-defined highest likelihood search iteration count on half a period of the algorithm for a given number of oracle input permutations to search. This graphs shows average time against qubit count for an optimal half period search:
 
 .. image:: performance/grovers.png
