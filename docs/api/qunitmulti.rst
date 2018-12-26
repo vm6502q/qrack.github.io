@@ -2,7 +2,7 @@
 
 .. Copyright (c) 2018
 
-QEngineOCLMulti
+QUnitMulti
 ========================
 
 Defined in `qengine_opencl_multi.hpp <https://github.com/vm6502q/qrack/blob/master/include/qunitmulti.hpp>`_.
