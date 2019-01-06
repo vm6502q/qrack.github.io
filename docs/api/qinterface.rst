@@ -72,6 +72,8 @@ State Manipulation Methods
 
 .. doxygenfunction:: Qrack::QInterface::Reverse(bitLenInt, bitLenInt)
 
+.. doxygenfunction:: Qrack::QInterface::TrySeparate(bitLenInt, bitLenInt)
+
 Quantum Gates
 -------------
 
