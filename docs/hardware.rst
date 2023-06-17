@@ -11,7 +11,7 @@ Output Unitary Clifford+RZ Simulation For Quantum Hardware
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 It is theoretically possible to use the Clifford+RZ improvements of v8.12 to compile for hardware. (`QUnit` cannot be used over `QStabilizerHybrid`, for this.)
 
-Since v8.13, it is now possible to output `QStabilizerHybrid` state to file, (not while using `QUnit`). The files have the following format, by line:
+Since v8.13, it is now possible to pipe any output `QStabilizerHybrid` state to an output stream with the `<<` operator, (not while using `QUnit`). The files have the following format, by line:
 
 [Logical qubit count]
 [Stabilizer qubit count, including ancillae]
