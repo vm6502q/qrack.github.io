@@ -14,23 +14,36 @@ It is theoretically possible to use the Clifford+RZ improvements of v8.12 to com
 Since v8.13, it is now possible to pipe any output `QStabilizerHybrid` state to an output stream with the `<<` operator, (not while using `QUnit`). The files have the following format, by line:
 
 [Logical qubit count]
+
 [Stabilizer qubit count, including ancillae]
+
 [Stabilizer x/z/r generators, one row per line, "tableau" format, repeated for logical qubit count of rows x2]
+
 [Per-qubit MPS buffers, 2x2 complex matrices, row-major order, one matrix per line, repeated for stabilizer qubit count of rows]
 
 
 For example:
 
 3
+
 3
+
 1 1 0 0 1 0 2
+
 0 1 0 1 0 0 0
+
 0 0 0 0 0 1 0
+
 0 0 0 1 0 1 2
+
 0 0 0 1 1 0 0
+
 1 1 1 0 1 0 0
+
 (1,0) (0,0) (0,0) (1,0)
+
 (1,0) (0,0) (0,0) (1,0)
+
 (0,0) (0.707107,-0.707107) (0,1) (0,0)
 
 is a valid file, with 0 ancillae. It is theoretically relatively easy to prepare this result of unitary circuit simulation on a quantum hardware device: first prepare the stabilizer state, (with purely Clifford gates,) then apply the (potentially non-Clifford) 2x2 matrices over the same sequential qubit index order. This can represent a universal quantum state of the logical qubits.
