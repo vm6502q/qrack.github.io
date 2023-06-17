@@ -5,11 +5,11 @@ Efficient Unitary Clifford+RZ Simulation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 `QStabilizerHybrid` is classically efficient for the gate set "Clifford+RZ," (or "Clifford+T,") except for measurement, since v8.12. The entire unitary portion of circuit simulation, before measurement, has a polynomial-complexity simulation algorithm, in space and time requirements. If measuring across the full width of the simulator, or sampling, measurement (alone) scales exponentially in space requirements proportional to (less than or up to) the number of non-Clifford RZ (or T) gates, and exponentially in time requirements proportional to base logical qubit count in the simulator instance.
 
-No special considerations are necessary to engage this simulation mode: simply restrict your gate set to Clifford+RZ, when using any simulator that properly includes the QStabilizerHybrid layer, such as the default optimal simulator stack.
+No special considerations are necessary to engage this simulation mode: simply restrict your gate set to Clifford+RZ, when using any simulator that properly includes the `QStabilizerHybrid` layer, such as the default optimal simulator stack.
 
 Output Unitary Clifford+RZ Simulation For Quantum Hardware
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-It is theoretically possible to use the Clifford+RZ improvements of v8.12 to compile for hardware.
+It is theoretically possible to use the Clifford+RZ improvements of v8.12 to compile for hardware. (`QUnit` cannot be used over `QStabilizerHybrid`, for this.)
 
 Since v8.13, it is now possible to output `QStabilizerHybrid` state to file, (not while using `QUnit`). The files have the following format, by line:
 
