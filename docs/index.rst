@@ -51,6 +51,8 @@ Daniel Strano would like to specifically note that Benn Bollay is almost entirel
     api/qunit
     api/qunitmulti
     api/qbdt
+    api/qtensornetwork
+    api/qcircuit
     api/6502
 
 .. The #http:// is a hack to get around Sphinx's re parser for links,
