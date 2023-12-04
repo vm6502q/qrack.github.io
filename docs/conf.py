@@ -114,7 +114,7 @@ html_static_path = ['_static']
 #
 # html_sidebars = {}
 
-html_extra_path = ['../build/html']
+html_extra_path = ['_build/html']
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
