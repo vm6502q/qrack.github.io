@@ -52,6 +52,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'breathe',
+    'sphinx-rtd-theme'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
