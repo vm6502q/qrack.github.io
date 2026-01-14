@@ -27,9 +27,6 @@ Getters and Setters
 
 .. doxygenfunction:: Qrack::QNeuron::SetSimulator
 .. doxygenfunction:: Qrack::QNeuron::GetSimulator
-.. doxygenfunction:: Qrack::QNeuron::SetAlpha
-.. doxygenfunction:: Qrack::QNeuron::SetActivationFn
-.. doxygenfunction:: Qrack::QNeuron::GetActivationFn
 .. doxygenfunction:: Qrack::QNeuron::SetAngles
 .. doxygenfunction:: Qrack::QNeuron::GetAngles
 .. doxygenfunction:: Qrack::QNeuron::GetInputCount
